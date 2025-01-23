@@ -1,0 +1,24 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    setup_ci if ENV['CI']
+    
+    # Sync certificates
+    match(type: "appstore", readonly: true)
+    
+    # Build the app
+    build_ios_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      export_method: "app-store",
+    )
+    
+    # Upload to TestFlight
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true,
+      apple_id: "6740911066" # Replace with your App ID from App Store Connect
+    )
+  end
+end
