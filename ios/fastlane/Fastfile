@@ -3,22 +3,33 @@ default_platform(:ios)
 platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
+    # Load local environment variables
+    Dotenv.load('.env.local')
+    
     setup_ci if ENV['CI']
     
-    # Sync certificates
+    # Verify env vars are loaded
+    UI.message "Key ID: #{ENV['APP_STORE_CONNECT_API_KEY_KEY_ID']}"
+    
+    # Rest of your existing code...
     match(type: "appstore", readonly: true)
     
-    # Build the app
     build_ios_app(
       workspace: "Runner.xcworkspace",
       scheme: "Runner",
       export_method: "app-store",
     )
     
-    # Upload to TestFlight
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
+      key_content: ENV["APP_STORE_CONNECT_API_KEY_KEY"]
+    )
+
     upload_to_testflight(
+      api_key: api_key,
       skip_waiting_for_build_processing: true,
-      apple_id: "6740911066" # Replace with your App ID from App Store Connect
+      apple_id: "6740911066"
     )
   end
 end

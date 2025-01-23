@@ -55,5 +55,4 @@ ios/fastlane/test_output
 *.p8
 report.xml
 Preview.html
-
-
+ios/fastlane/.env.local
