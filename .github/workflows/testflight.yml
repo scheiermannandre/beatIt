@@ -3,7 +3,7 @@ name: Deploy to TestFlight
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:  # Allows manual trigger
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -16,19 +16,21 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '3.0'
+        ruby-version: '3.2.2'
         bundler-cache: true
     
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.27.3'
+        flutter-version: '3.13.0'  # Update this to your Flutter version
         channel: 'stable'
     
     - name: Install dependencies
       run: |
         flutter pub get
-        cd ios && pod install
+        cd ios
+        bundle install
+        pod install
         
     - name: Deploy to TestFlight
       env:
