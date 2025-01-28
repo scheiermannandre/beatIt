@@ -5,6 +5,12 @@ before_all do
   ensure_git_status_clean if ENV['CI']
 end
 
+# Add a shared lane to deploy to both platforms
+desc "Deploy to both stores"
+lane :deploy_beta do
+  ios_beta
+  android_beta
+end
 platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
@@ -61,9 +67,9 @@ platform :ios do
       apple_id: "6740911066"
     )
   end
+end
 
-
-  platform :android do
+platform :android do
     desc "Deploy to internal track on Play Store"
     lane :beta do
       # Get absolute paths
@@ -90,13 +96,4 @@ platform :ios do
         skip_upload_changelogs: true
       )
     end
-  end
-  
-  # Add a shared lane to deploy to both platforms
-  desc "Deploy to both stores"
-  lane :deploy do
-    ios_beta
-    android_beta
-  end
-
 end

@@ -62,5 +62,4 @@ jobs:
           FCI_KEY_PASSWORD: ${{ secrets.FCI_KEY_PASSWORD }}
         run: |
           cd fastlane
-          bundle exec fastlane ios beta
-          bundle exec fastlane android beta
+          bundle exec fastlane deploy_beta
