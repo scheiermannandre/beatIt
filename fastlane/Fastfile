@@ -1,21 +1,18 @@
 default_platform(:ios)
 
 before_all do
-  # Common setup for all lanes
   ensure_git_status_clean if ENV['CI']
 end
 
-# Add a shared lane to deploy to both platforms
 desc "Deploy to both stores"
 lane :deploy_beta do
-  ios_beta
-  android_beta
+  sh "fastlane ios beta"
+  sh "fastlane android beta"
 end
+
 platform :ios do
   desc "Push a new beta build to TestFlight"
-  lane :beta do
-    ios_path = File.expand_path('../ios', __dir__)  # Get absolute path to iOS directory
-    
+  lane :beta do |options|
     if !ENV['CI']
       begin
         Dotenv.load('.env.local')
@@ -26,74 +23,57 @@ platform :ios do
     
     setup_ci if ENV['CI']
     
-    # Sync both development and appstore certificates
-    match(type: "development", readonly: true)
-    match(type: "appstore", readonly: true)
+    # Remove the cocoapods step for now
     
-    # Update code signing settings
-    update_code_signing_settings(
-      use_automatic_signing: false,
-      path: File.join(ios_path, "Runner.xcodeproj"),  # Use absolute path
-      team_id: ENV["TEAM_ID"],
-      targets: ["Runner"],
-      code_sign_identity: "iPhone Distribution",
-      profile_name: "match AppStore com.scheiermannandre.beatIt",
-      bundle_identifier: "com.scheiermannandre.beatIt"
+    # Sync certificates
+    match(
+      type: "appstore",
+      readonly: true,
+      app_identifier: "com.scheiermannandre.beatIt"
     )
     
     # Build the app
     build_ios_app(
-      workspace: File.join(ios_path, "Runner.xcworkspace"),  # Use absolute path
+      workspace: "ios/Runner.xcworkspace",
       scheme: "Runner",
       export_method: "app-store",
-      export_options: {
-        method: "app-store",
-        provisioningProfiles: {
-          "com.scheiermannandre.beatIt" => "match AppStore com.scheiermannandre.beatIt"
-        }
-      },
-      xcargs: "-allowProvisioningUpdates"
+      xcargs: "-allowProvisioningUpdates",
+      clean: true,
+      output_directory: "./build",
+      output_name: "Runner.ipa"
     )
     
+    # Upload to TestFlight
     api_key = app_store_connect_api_key(
       key_id: ENV["APP_STORE_CONNECT_API_KEY_KEY_ID"],
       issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
       key_content: ENV["APP_STORE_CONNECT_API_KEY_KEY"]
     )
-
+    
     upload_to_testflight(
       api_key: api_key,
-      skip_waiting_for_build_processing: true,
-      apple_id: "6740911066"
+      skip_waiting_for_build_processing: true
     )
   end
 end
 
 platform :android do
-    desc "Deploy to internal track on Play Store"
-    lane :beta do
-      # Get absolute paths
-      project_root = File.expand_path('..', __dir__)
-      aab_path = File.join(project_root, "build/app/outputs/bundle/release/app-release.aab")
-      
-      # Build with Flutter
-      Dir.chdir(project_root) do
-        sh("flutter build appbundle --release")
-      end
-  
-      # Debug output
-      UI.message("Looking for AAB at: #{aab_path}")
-      UI.message("File exists: #{File.exist?(aab_path)}")
-  
-      # Upload to Play Store
-      upload_to_play_store(
-        track: 'internal',
-        release_status: 'draft',
-        aab: aab_path,
-        skip_upload_metadata: true,
-        skip_upload_images: true,
-        skip_upload_screenshots: true,
-        skip_upload_changelogs: true
-      )
+  desc "Deploy to internal track on Play Store"
+  lane :beta do |options|
+    # Build with Flutter
+    Dir.chdir("..") do
+      sh("flutter build appbundle --release")
     end
+
+    # Upload to Play Store
+    upload_to_play_store(
+      track: 'internal',
+      release_status: 'draft',
+      aab: "../build/app/outputs/bundle/release/app-release.aab",
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_changelogs: true
+    )
+  end
 end
