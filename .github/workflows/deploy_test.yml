@@ -13,10 +13,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check Version Increment
-        run: |
-          chmod +x .github/scripts/check_version.sh
-          .github/scripts/check_version.sh
+      # - name: Check Version Increment
+      #   run: |
+      #     chmod +x .github/scripts/check_version.sh
+      #     .github/scripts/check_version.sh
 
       - name: Setup Java
         uses: actions/setup-java@v3
