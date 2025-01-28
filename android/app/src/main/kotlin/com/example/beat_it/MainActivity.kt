@@ -1,4 +1,4 @@
-package com.example.beat_it
+package com.scheiermannandre.beatIt
 
 import io.flutter.embedding.android.FlutterActivity
 

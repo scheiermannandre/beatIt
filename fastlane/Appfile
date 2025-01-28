@@ -1,0 +1,6 @@
+# iOS configuration
+app_identifier("com.scheiermannandre.beatIt") # The bundle identifier of your iOS app
+
+# Android configuration
+json_key_file("/Users/home/Development/Apps/BeatIt/Android/pc-api-6264999606932119682-195-dbb6e2670db2.json") # Path to your Play Store JSON key file
+package_name("com.scheiermannandre.beatIt") # Your Android package name
