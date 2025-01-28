@@ -8,8 +8,8 @@ end
 # Add a shared lane to deploy to both platforms
 desc "Deploy to both stores"
 lane :deploy_beta do
-  ios beta
-  android beta
+  ios_beta
+  android_beta
 end
 platform :ios do
   desc "Push a new beta build to TestFlight"
