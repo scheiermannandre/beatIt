@@ -6,9 +6,16 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class DashboardScreen extends HookConsumerWidget {
+class DashboardScreen extends StatefulHookConsumerWidget {
   const DashboardScreen({super.key});
 
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _DashboardScreenState();
+}
+
+class _DashboardScreenState extends ConsumerState<DashboardScreen>
+    with WidgetsBindingObserver {
   static const _animationConfig = (
     fadeInDuration: Duration(milliseconds: 500),
     slideBegin: Offset(0.5, 0),
@@ -20,9 +27,17 @@ class DashboardScreen extends HookConsumerWidget {
   static const _itemSpacing = 8.0;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      ref
+          .read(uncheckedChallengesAnalyzerProvider.notifier)
+          .shouldCheckChallenges();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final scrollController = useScrollController();
-    ref.watch(appLifecycleProvider);
     final challengesAsyncValue = ref.watch(dashboardViewModelProvider);
 
     _setupUncheckedChallengesListener(

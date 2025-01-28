@@ -9,20 +9,21 @@ enum ChallengeDurationLabel {
 }
 
 enum ChallengeDuration {
-  sevenDays(7, ChallengeDurationLabel.days),
-  tenDays(10, ChallengeDurationLabel.days),
-  fourteenDays(14, ChallengeDurationLabel.days),
-  twentyOneDays(21, ChallengeDurationLabel.days),
-  thirtyDays(30, ChallengeDurationLabel.days),
-  threeMonths(3, ChallengeDurationLabel.months),
-  sixMonths(6, ChallengeDurationLabel.months),
-  oneYear(1, ChallengeDurationLabel.years);
+  sevenDays(7, ChallengeDurationLabel.days, 7),
+  tenDays(10, ChallengeDurationLabel.days, 10),
+  fourteenDays(14, ChallengeDurationLabel.days, 14),
+  twentyOneDays(21, ChallengeDurationLabel.days, 21),
+  thirtyDays(30, ChallengeDurationLabel.days, 30),
+  threeMonths(3, ChallengeDurationLabel.months, 90),
+  sixMonths(6, ChallengeDurationLabel.months, 180),
+  oneYear(1, ChallengeDurationLabel.years, 365);
 
-  const ChallengeDuration(this.amount, this.label);
+  const ChallengeDuration(this.uiAmount, this.label, this.amount);
+  final int uiAmount;
   final int amount;
   final ChallengeDurationLabel label;
 
   String getLabel(BuildContext context) {
-    return '$amount ${label.name.hardcoded}';
+    return '$uiAmount ${label.name.hardcoded}';
   }
 }

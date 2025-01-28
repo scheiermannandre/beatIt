@@ -44,19 +44,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Fastlane
-ios/fastlane/report.xml
-ios/fastlane/Preview.html
-ios/fastlane/screenshots
-ios/fastlane/test_output
-*.cer
-*.mobileprovision
-*.p12
-*.p8
-report.xml
-Preview.html
-ios/fastlane/.env.local
-
 *.jks
 android/app/upload-keystore.jks
 android/key.properties

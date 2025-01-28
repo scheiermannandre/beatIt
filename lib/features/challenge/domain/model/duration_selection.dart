@@ -14,7 +14,7 @@ class EnumDuration extends DurationSelection {
   final ChallengeDuration value;
 
   @override
-  int get days => value.amount;
+  int get days => value.uiAmount;
 
   @override
   String getLabel(BuildContext context) => value.getLabel(context);

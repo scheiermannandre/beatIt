@@ -1,7 +1,7 @@
 name: beat_it
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.1.1+11
+version: 0.1.1+12
 
 environment:
   sdk: ^3.6.0
@@ -18,13 +18,13 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   hooks_riverpod: ^2.6.1
+  intl: ^0.18.0
   result_dart: ^2.0.0
   riverpod_annotation: ^2.6.1
   riverpod_generator: ^2.6.3
   uuid: ^4.3.3
   very_good_analysis: ^7.0.0
   watch_it: ^1.6.2
-  intl: ^0.18.0
 
 dev_dependencies: 
   custom_lint: ^0.7.0
