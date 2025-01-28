@@ -1,7 +1,7 @@
 name: beat_it
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.1.1+7
+version: 0.1.1+8
 
 environment:
   sdk: ^3.6.0
