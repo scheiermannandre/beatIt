@@ -47,7 +47,7 @@ void main() {
       verifyNever(
         () => mockService.updateChallenge(any()),
       );
-      verifyNever(() => mockService.deleteChallenge(any()));
+      verifyNever(() => mockService.archiveChallenge(any()));
     });
 
     test('does nothing when yesterday was skipped', () async {
@@ -68,7 +68,7 @@ void main() {
       verifyNever(
         () => mockService.updateChallenge(any()),
       );
-      verifyNever(() => mockService.deleteChallenge(any()));
+      verifyNever(() => mockService.archiveChallenge(any()));
     });
 
     test('extends challenge when startOver is disabled', () async {
@@ -92,7 +92,7 @@ void main() {
         () => mockService.updateChallenge(any()),
       ).thenAnswer((invocation) {
         capturedChallenge =
-            invocation.namedArguments[#challenge] as ChallengeModel;
+            invocation.positionalArguments[0] as ChallengeModel;
         return Future.value(Success(challenge));
       });
 
@@ -132,7 +132,7 @@ void main() {
         () => mockService.updateChallenge(any()),
       ).thenAnswer((invocation) {
         capturedChallenge =
-            invocation.namedArguments[#challenge] as ChallengeModel;
+            invocation.positionalArguments[0] as ChallengeModel;
         return Future.value(Success(challenge));
       });
 
@@ -165,7 +165,7 @@ void main() {
       );
       when(() => mockService.getChallenges())
           .thenAnswer((_) async => Success([challenge]));
-      when(() => mockService.deleteChallenge('1'))
+      when(() => mockService.archiveChallenge('1'))
           .thenAnswer((_) async => const Success(unit));
       await challengeRepoLocal.getChallenges();
       // Act
@@ -174,7 +174,7 @@ void main() {
 
       // Assert
       expect(result.isSuccess(), true);
-      verify(() => mockService.deleteChallenge('1')).called(1);
+      verify(() => mockService.archiveChallenge('1')).called(1);
       verifyNever(
           () => mockService.updateChallenge(any()),
       );
@@ -196,7 +196,7 @@ void main() {
       verifyNever(
         () => mockService.updateChallenge(any()),
       );
-      verifyNever(() => mockService.deleteChallenge(any()));
+      verifyNever(() => mockService.archiveChallenge(any()));
     });
   });
 }

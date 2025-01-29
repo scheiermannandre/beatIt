@@ -5,7 +5,6 @@ typedef BoxKey = dynamic;
 
 /// Handles atomic operations on Hive boxes with rollback capability
 class HiveTransaction<T> {
-
   /// Maps box names to their instances
   final Map<BoxName, Box<T>> _boxes = {};
 
@@ -84,17 +83,20 @@ class HiveTransaction<T> {
   }
 
   Future<void> _executeOperations() async {
-    await Future.wait([
-      ..._pendingWrites.entries.map((entry) {
-        final box = _boxes[entry.key]!;
-        return box.putAll(entry.value);
-      }),
-      ..._pendingDeletes.map((deleteKey) {
+    await Future.wait(
+      _pendingDeletes.map((deleteKey) {
         final parts = deleteKey.split(':');
         final box = _boxes[parts[0]]!;
         return box.delete(parts[1]);
       }),
-    ]);
+    );
+
+    await Future.wait(
+      _pendingWrites.entries.map((entry) {
+        final box = _boxes[entry.key]!;
+        return box.putAll(entry.value);
+      }),
+    );
   }
 
   void _clear() {

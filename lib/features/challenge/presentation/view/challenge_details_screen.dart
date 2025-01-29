@@ -33,7 +33,7 @@ class ChallengeDetailsScreen extends HookConsumerWidget {
         ref.watch(challengeViewModelProvider(challengeId));
     final challengeViewModel =
         ref.read(challengeViewModelProvider(challengeId).notifier);
-    _setupArchiveChallengeListener(challengeViewModel, context);
+    _setupArchiveChallengeListener(challengeViewModel, context, ref);
 
     return challengeAsyncValue.whenWithData((challenge) {
       final completedChallenges =
@@ -124,13 +124,19 @@ class ChallengeDetailsScreen extends HookConsumerWidget {
   void _setupArchiveChallengeListener(
     ChallengeViewModel challengeViewModel,
     BuildContext context,
+    WidgetRef ref,
   ) {
     useEffect(
       () {
         final subscription = challengeViewModel.archiveChallengeCommand.results
             .listen((result, _) {
-          if (result.isSuccess) {
+          if (result.data?.isSuccess() ?? false) {
             context.pop();
+          } else if (result.data?.isError() ?? false) {
+            ref.read(appMessageManagerProvider).showAppMessage(
+                  context,
+                  result.data!.exceptionOrNull()! as AppMessage,
+                );
           }
         });
         return subscription.cancel;
