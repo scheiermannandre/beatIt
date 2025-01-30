@@ -1,6 +1,6 @@
 import 'package:beat_it/core/core.dart';
 import 'package:beat_it/features/challenge/challenge.dart';
-import 'package:beat_it/utils/utils.dart';
+import 'package:beat_it/foundation/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -25,6 +25,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
   static const _listPadding =
       EdgeInsets.only(top: 8, bottom: 24, left: 8, right: 8);
   static const _itemSpacing = 8.0;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {

@@ -1,6 +1,5 @@
-import 'package:beat_it/core/core.dart';
 import 'package:beat_it/features/challenge/challenge.dart';
-import 'package:beat_it/utils/utils.dart';
+import 'package:beat_it/foundation/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_command/flutter_command.dart';
@@ -28,12 +27,12 @@ class ChallengeDetailsScreen extends HookConsumerWidget {
   final String challengeId;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useAppMessages(context, ref, 'challenge_details');
     final challengeAsyncValue =
         ref.watch(challengeViewModelProvider(challengeId));
     final challengeViewModel =
         ref.read(challengeViewModelProvider(challengeId).notifier);
     _setupArchiveChallengeListener(challengeViewModel, context, ref);
+    useMessageNotifier(context, challengeViewModel);
 
     return challengeAsyncValue.whenWithData((challenge) {
       final completedChallenges =
@@ -132,11 +131,6 @@ class ChallengeDetailsScreen extends HookConsumerWidget {
             .listen((result, _) {
           if (result.data?.isSuccess() ?? false) {
             context.pop();
-          } else if (result.data?.isError() ?? false) {
-            ref.read(appMessageManagerProvider).showAppMessage(
-                  context,
-                  result.data!.exceptionOrNull()! as AppMessage,
-                );
           }
         });
         return subscription.cancel;

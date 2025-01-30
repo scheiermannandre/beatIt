@@ -1,4 +1,4 @@
-import 'package:beat_it/utils/utils.dart';
+import 'package:beat_it/foundation/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

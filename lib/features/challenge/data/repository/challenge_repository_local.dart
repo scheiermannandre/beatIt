@@ -1,6 +1,6 @@
 import 'package:beat_it/core/core.dart';
 import 'package:beat_it/features/challenge/challenge.dart';
-import 'package:beat_it/utils/utils.dart';
+import 'package:beat_it/foundation/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:result_dart/result_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

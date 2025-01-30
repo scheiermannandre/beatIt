@@ -1,7 +1,5 @@
-import 'package:beat_it/core/router/bottom_sheet_route.dart';
-import 'package:beat_it/core/router/routes.dart';
+import 'package:beat_it/core/core.dart';
 import 'package:beat_it/features/challenge/challenge.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 final appRouter = GoRouter(

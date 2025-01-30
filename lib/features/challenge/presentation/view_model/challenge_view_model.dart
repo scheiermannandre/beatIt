@@ -1,8 +1,7 @@
 import 'dart:async';
 
-import 'package:beat_it/core/providers/app_message_provider.dart';
 import 'package:beat_it/features/challenge/challenge.dart';
-import 'package:beat_it/lib.dart';
+import 'package:beat_it/foundation/foundation.dart';
 import 'package:flutter_command/flutter_command.dart';
 import 'package:result_dart/result_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -10,16 +9,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'challenge_view_model.g.dart';
 
 @riverpod
-class ChallengeViewModel extends _$ChallengeViewModel {
+class ChallengeViewModel extends _$ChallengeViewModel
+    with MessageNotifierMixin {
   late final ChallengeRepository _repository;
-  late final AppMessageManager _appMessageManager;
   late final StreamSubscription<ChallengeModel?> _subscription;
   late final Command<void, Result<Unit>> archiveChallengeCommand;
   late final Command<void, Result<Unit>> checkChallengeCommand;
   @override
   FutureOr<ChallengeModel> build(String challengeId) async {
     _repository = ref.read(challengeRepositoryProvider);
-    _appMessageManager = ref.read(appMessageManagerProvider);
 
     checkChallengeCommand = Command.createAsync<DateTime, Result<Unit>>(
       (date) => checkChallengeForDate(challengeId: challengeId, date: date),
@@ -44,10 +42,9 @@ class ChallengeViewModel extends _$ChallengeViewModel {
 
   Future<ChallengeModel> getChallenge(String challengeId) async {
     final challengeResult = await _repository.getChallengeById(challengeId);
-    //state = AsyncData(challengeResult.getOrNull());
     return challengeResult.fold(
       (challenge) => challenge,
-      (error) => throw Exception('Failed to get challenge'),
+      (error) => throw error,
     );
   }
 
@@ -69,9 +66,8 @@ class ChallengeViewModel extends _$ChallengeViewModel {
     if (state is AsyncData) {
       return const Success(unit);
     }
-    final message = 'Failed to check challenge for date'.hardcoded;
-    _appMessageManager.showError(message);
-    return Failure(Exception(message));
+    showSnackBar(state.error! as AppMessage);
+    return Failure(Exception());
   }
 
   AsyncResult<Unit> enableStartOver({
@@ -91,6 +87,8 @@ class ChallengeViewModel extends _$ChallengeViewModel {
     );
     if (result.isSuccess()) {
       await _subscription.cancel();
+    } else {
+      showSnackBar(result.exceptionOrNull()! as AppMessage);
     }
     return result;
   }

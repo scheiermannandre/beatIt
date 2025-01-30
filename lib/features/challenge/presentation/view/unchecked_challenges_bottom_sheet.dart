@@ -1,6 +1,5 @@
-import 'package:beat_it/core/core.dart';
 import 'package:beat_it/features/challenge/challenge.dart';
-import 'package:beat_it/utils/utils.dart';
+import 'package:beat_it/foundation/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_command/flutter_command.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -24,14 +23,12 @@ class UncheckedChallengesBottomSheet extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final date = DateTime.now().subtract(const Duration(days: 1));
-    useAppMessages(context, ref, 'unchecked_challenges');
-
     ref.watch(uncheckedChallengesBottomSheetViewModelProvider);
     final viewModel =
         ref.watch(uncheckedChallengesBottomSheetViewModelProvider.notifier);
     _setupCommandListeners(viewModel, context);
     final isCheckLoading = useState(false);
-
+    useMessageNotifier(context, viewModel);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -109,7 +106,7 @@ class UncheckedChallengesBottomSheet extends HookConsumerWidget {
             spacing: _warnDialogSpacing,
             children: [
               Text(
-                'Depending on your settings, you will either start certain challenges from the beginning or when still available grace days will be applied otherwise those Challenges will be archived. '
+                '''Depending on your settings, you will either start certain challenges from the beginning or when still available grace days will be applied otherwise those Challenges will be archived. '''
                     .hardcoded,
                 textAlign: TextAlign.center,
               ),
@@ -141,16 +138,14 @@ class UncheckedChallengesBottomSheet extends HookConsumerWidget {
     useEffect(
       () {
         viewModel.checkChallengesCommand.results.listen((result, _) {
-          result.data?.fold(
-            (_) => Navigator.of(context).pop(),
-            (_) => null,
-          );
+          if (result.data ?? false) {
+            Navigator.of(context).pop();
+          }
         });
         viewModel.closeCommand.results.listen((result, _) {
-          result.data?.fold(
-            (_) => Navigator.of(context).pop(),
-            (_) => null,
-          );
+          if (result.data ?? false) {
+            Navigator.of(context).pop();
+          }
         });
         return null;
       },

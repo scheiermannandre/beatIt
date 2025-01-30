@@ -1,8 +1,6 @@
 import 'package:beat_it/core/core.dart';
 import 'package:beat_it/features/challenge/challenge.dart';
-import 'package:beat_it/features/challenge/presentation/widgets/check_button.dart';
-import 'package:beat_it/utils/extensions/async_value_extension.dart';
-import 'package:beat_it/utils/utils.dart';
+import 'package:beat_it/foundation/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -35,7 +33,7 @@ class _ChallengeWidgetState extends ConsumerState<ChallengeWidget>
 
   @override
   Widget build(BuildContext context) {
-   super.build(context); // Required by AutomaticKeepAliveClientMixin
+    super.build(context); // Required by AutomaticKeepAliveClientMixin
 
     final challengeAsyncValue =
         ref.watch(challengeViewModelProvider(widget.challengeId));

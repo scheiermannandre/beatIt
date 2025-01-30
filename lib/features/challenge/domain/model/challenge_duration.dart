@@ -1,4 +1,4 @@
-import 'package:beat_it/utils/utils.dart';
+import 'package:beat_it/foundation/foundation.dart';
 import 'package:flutter/material.dart';
 
 enum ChallengeDurationLabel {

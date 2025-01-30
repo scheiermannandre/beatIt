@@ -32,7 +32,7 @@ class DashboardViewModel extends _$DashboardViewModel {
 
     return result.fold(
       (data) => data,
-      (error) => throw Exception('Failed to get challenges'),
+      (error) => throw error,
     );
   }
 }

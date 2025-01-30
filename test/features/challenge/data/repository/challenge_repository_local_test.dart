@@ -91,8 +91,7 @@ void main() {
       when(
         () => mockService.updateChallenge(any()),
       ).thenAnswer((invocation) {
-        capturedChallenge =
-            invocation.positionalArguments[0] as ChallengeModel;
+        capturedChallenge = invocation.positionalArguments[0] as ChallengeModel;
         return Future.value(Success(challenge));
       });
 
@@ -131,8 +130,7 @@ void main() {
       when(
         () => mockService.updateChallenge(any()),
       ).thenAnswer((invocation) {
-        capturedChallenge =
-            invocation.positionalArguments[0] as ChallengeModel;
+        capturedChallenge = invocation.positionalArguments[0] as ChallengeModel;
         return Future.value(Success(challenge));
       });
 
@@ -176,7 +174,7 @@ void main() {
       expect(result.isSuccess(), true);
       verify(() => mockService.archiveChallenge('1')).called(1);
       verifyNever(
-          () => mockService.updateChallenge(any()),
+        () => mockService.updateChallenge(any()),
       );
       final challengeResult = await challengeRepoLocal.getChallengeById('1');
       expect(challengeResult.isError(), true);

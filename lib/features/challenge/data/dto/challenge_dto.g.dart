@@ -127,17 +127,11 @@ class DayStatusDtoAdapter extends TypeAdapter<DayStatusDto> {
 
   @override
   void write(BinaryWriter writer, DayStatusDto obj) {
-    switch (obj) {
-      case DayStatusDto.completed:
-        writer.writeByte(0);
-        break;
-      case DayStatusDto.skipped:
-        writer.writeByte(1);
-        break;
-      case DayStatusDto.none:
-        writer.writeByte(2);
-        break;
-    }
+    final _ = switch (obj) {
+      DayStatusDto.completed => writer.writeByte(0),
+      DayStatusDto.skipped => writer.writeByte(1),
+      DayStatusDto.none => writer.writeByte(2)
+    };
   }
 
   @override

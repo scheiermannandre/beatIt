@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:beat_it/core/exceptions/app_exception.dart';
+import 'package:beat_it/core/core.dart';
 import 'package:beat_it/features/challenge/challenge.dart';
 import 'package:result_dart/result_dart.dart';
 

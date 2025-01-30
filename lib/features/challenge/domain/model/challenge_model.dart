@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:beat_it/utils/utils.dart';
+import 'package:beat_it/foundation/foundation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
@@ -122,7 +122,7 @@ class ChallengeModel {
 
   @override
   String toString() {
-    return 'ChallengeModel(id: $id, title: $title, targetDays: $targetDays, startDate: $startDate, _days: $_days, lastCompletedDate: $lastCompletedDate, isArchived: $isArchived, startOverEnabled: $startOverEnabled, graceDaysSpent: $graceDaysSpent, createdAt: $createdAt)';
+    return '''ChallengeModel(id: $id, title: $title, targetDays: $targetDays, startDate: $startDate, _days: $_days, lastCompletedDate: $lastCompletedDate, isArchived: $isArchived, startOverEnabled: $startOverEnabled, graceDaysSpent: $graceDaysSpent, createdAt: $createdAt)''';
   }
 
   @override

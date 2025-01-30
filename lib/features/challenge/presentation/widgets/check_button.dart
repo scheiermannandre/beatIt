@@ -1,6 +1,5 @@
-import 'package:beat_it/features/challenge/domain/model/challenge_model.dart';
-import 'package:beat_it/lib.dart';
-import 'package:beat_it/utils/extensions/animation_controller_extension.dart';
+import 'package:beat_it/features/challenge/challenge.dart';
+import 'package:beat_it/foundation/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_command/flutter_command.dart';
@@ -25,7 +24,7 @@ class CheckButton extends HookConsumerWidget {
         ref.watch(challengeViewModelProvider(challengeId));
     final challengeViewModel =
         ref.watch(challengeViewModelProvider(challengeId).notifier);
-    useAppMessages(context, ref, 'check_button');
+    useMessageNotifier(context, challengeViewModel);
     final challengeModel = challengeModelAsyncValue.valueOrNull;
     final theme = Theme.of(context);
     final isDayCompleted = challengeModel?.isDayCompleted(date: date) ?? false;
@@ -84,6 +83,7 @@ class CheckButton extends HookConsumerWidget {
         child: Button.icon(
           onPressed: (isLoading?.value ?? false)
               ? null
+              // ignore: void_checks
               : () => challengeViewModel.checkChallengeCommand.execute(date),
           icon: const Icon(Icons.check, color: Colors.white),
           style: ButtonStyle(

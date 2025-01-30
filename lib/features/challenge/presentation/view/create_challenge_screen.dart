@@ -1,6 +1,6 @@
 import 'package:beat_it/core/core.dart';
 import 'package:beat_it/features/challenge/challenge.dart';
-import 'package:beat_it/utils/utils.dart';
+import 'package:beat_it/foundation/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_command/flutter_command.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -19,8 +19,6 @@ class CreateChallengeScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useAppMessages(context, ref, 'create_challenge');
-
     final titleController = useTextEditingController();
     final durationController = useTextEditingController();
     final startDateController = useTextEditingController();
@@ -30,6 +28,7 @@ class CreateChallengeScreen extends HookConsumerWidget {
 
     final createState = ref.watch(createChallengeViewModelProvider);
     final createViewModel = ref.read(createChallengeViewModelProvider.notifier);
+    useMessageNotifier(context, createViewModel);
 
     _setupCreateChallengeCommandListener(createViewModel, context);
 

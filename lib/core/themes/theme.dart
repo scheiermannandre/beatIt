@@ -123,4 +123,3 @@ abstract final class AppTheme {
     );
   }
 }
-
