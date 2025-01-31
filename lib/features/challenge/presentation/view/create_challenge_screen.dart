@@ -34,7 +34,7 @@ class CreateChallengeScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Challenge'.hardcoded),
+        title: Text(context.l10n.createChallengeTitle),
       ),
       body: ContentWithBottomSection(
         content: Column(
@@ -43,12 +43,12 @@ class CreateChallengeScreen extends HookConsumerWidget {
           children: [
             _StyledTextField(
               controller: titleController,
-              label: 'I commit to do'.hardcoded,
+              label: context.l10n.iCommitToDo,
               context: context,
             ),
             _StyledTextField(
               controller: durationController,
-              label: 'for'.hardcoded,
+              label: context.l10n.forText,
               readOnly: true,
               focusNode: AlwaysDisabledFocusNode(),
               suffixIcon: const Icon(Icons.keyboard_arrow_right_rounded),
@@ -58,7 +58,7 @@ class CreateChallengeScreen extends HookConsumerWidget {
             ),
             _StyledTextField(
               controller: startDateController,
-              label: 'and I will start on'.hardcoded,
+              label: context.l10n.andIWillStartOn,
               readOnly: true,
               focusNode: AlwaysDisabledFocusNode(),
               suffixIcon: const Icon(Icons.keyboard_arrow_right_rounded),
@@ -75,9 +75,7 @@ class CreateChallengeScreen extends HookConsumerWidget {
               onChanged: (value) {
                 startOverEnabled.value = value;
               },
-              title: Text(
-                'Start over when breaking the streak'.hardcoded,
-              ),
+              title: Text(context.l10n.startOverWhenBreaking),
               contentPadding: _contentPadding,
             ),
             FilledButton(
@@ -94,7 +92,7 @@ class CreateChallengeScreen extends HookConsumerWidget {
               ),
               child: createState.isLoading
                   ? const CircularProgressIndicator()
-                  : Text('Create Challenge'.hardcoded),
+                  : Text(context.l10n.uiCreateChallenge),
             ),
           ],
         ),
@@ -128,12 +126,12 @@ class CreateChallengeScreen extends HookConsumerWidget {
   ) async {
     final result = await showSelectionBottomSheet<ChallengeDuration, int>(
       context: context,
-      title: 'Select Duration'.hardcoded,
+      title: context.l10n.selectDuration,
       values: ChallengeDuration.values,
       labelExtractor: (value) => value.getLabel(context),
       customWidget: ListTile(
         leading: const Icon(Icons.add),
-        title: Text('Custom Duration'.hardcoded),
+        title: Text(context.l10n.customDuration),
         onTap: () async {
           final navigatorContext = context;
 
@@ -147,7 +145,8 @@ class CreateChallengeScreen extends HookConsumerWidget {
               navigatorContext,
               CustomValue<ChallengeDuration, int>(
                 value: selectedDays,
-                labelExtractor: (value) => '$value Days'.hardcoded,
+                labelExtractor: (value) =>
+                    context.l10n.customDurationDays(value),
               ),
             );
           }

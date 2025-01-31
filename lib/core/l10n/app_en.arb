@@ -1,0 +1,145 @@
+{
+  "appTitle": "Beat It",
+  "@appTitle": {
+    "description": "The name of the app"
+  },
+  "uiCreateChallenge": "Create Challenge",
+  "@uiCreateChallenge": {
+    "description": "Button text to create a new challenge"
+  },
+  "uiNoChallenges": "No challenges yet",
+  "@uiNoChallenges": {
+    "description": "Text shown when there are no challenges"
+  },
+  "uiCreateFirstChallenge": "Create your first challenge to get started",
+  "@uiCreateFirstChallenge": {
+    "description": "Subtitle shown when there are no challenges"
+  },
+  "errorFailedToCreate": "Failed to create challenge",
+  "errorFailedToCheck": "Failed to check challenge",
+  "errorFailedToArchive": "Failed to archive challenge",
+  "errorFailedToGet": "Failed to get challenge",
+  "errorFailedToUpdate": "Failed to update challenge",
+  "errorFailedToBreak": "Failed to break challenge",
+  "errorDateOutsideChallengePeriod": "Date is outside challenge period",
+  "errorInvalidDuration": "Challenge duration must be greater than 0",
+  "errorFailedToCheckMany": "Failed to check many challenges: {challenges}",
+  "@errorFailedToCheckMany": {
+    "placeholders": {
+      "challenges": {
+        "type": "String"
+      }
+    }
+  },
+  "errorFailedToBreakMany": "Failed to break many challenges: {challenges}",
+  "@errorFailedToBreakMany": {
+    "placeholders": {
+      "challenges": {
+        "type": "String"
+      }
+    }
+  },
+  "successChallengeCreated": "Challenge created successfully",
+  "successChallengeChecked": "Challenge checked successfully",
+  "successChallengeArchived": "Challenge archived successfully",
+  "successChallengesBatchChecked": "All challenges checked",
+  "successChallengesBatchBroken": "All challenges broken",
+  
+  "day": "Day",
+  "week": "Week",
+  "month": "Month",
+  "year": "Year",
+  "challengeDurationLabel": "{count, plural, =1{{count} {unit}} other{{count} {unit}s}}",
+  "@challengeDurationLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeCommitmentText": "I committed to {activity} for {duration, plural, =1{{duration} day} other{{duration} days}}, starting from {date}",
+  "@challengeCommitmentText": {
+    "placeholders": {
+      "activity": { "type": "String" },
+      "duration": { "type": "int" },
+      "date": { "type": "String" }
+    }
+  },
+  "startOverWhenBreaking": "Start over when breaking the streak",
+  "currentStreakTitle": "Current streak",
+  "bestStreakTitle": "Best streak",
+  "streak": "{count, plural, =1{{count} day} other{{count} days}}",
+  "@streak": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "graceDaysSpent": "Grace days spent",
+  "graceDaysCount": "{spent}/{total}",
+  "@graceDaysCount": {
+    "placeholders": {
+      "spent": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "currentAttempt": "Current attempt",
+  "archiveChallenge": "Archive Challenge",
+  "createChallengeTitle": "Create Challenge",
+  "iCommitToDo": "I commit to do",
+  "forText": "for",
+  "andIWillStartOn": "and I will start on",
+  "customDuration": "Custom Duration",
+  "customDurationDays": "{count, plural, =1{{count} Day} other{{count} Days}}",
+  "@customDurationDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectDuration": "Select Duration",
+  "close": "Close",
+  "checkAll": "Check All",
+  "uncheckedChallengesTitle": "Unchecked Challenges from Yesterday",
+  "uncheckedChallengesWarningTitle": "{count, plural, =1{You have {count} unchecked Challenge} other{You have {count} unchecked Challenges}}",
+  "@uncheckedChallengesWarningTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "uncheckedChallengesWarningMessage": "Depending on your settings, you will either start certain challenges from the beginning or when still available grace days will be applied otherwise those Challenges will be archived.",
+  "uncheckedChallengesWarningQuestion": "Do you want to continue?",
+  "cancel": "Cancel",
+  "continueText": "Continue",
+
+  "percentageLeft": "{percentage}% left",
+  "@percentageLeft": {
+    "placeholders": {
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
+  "pleaseEnterValidNumber": "Please enter a valid number",
+  "numberMustBeAtLeast": "Number must be at least {min}",
+  "@numberMustBeAtLeast": {
+    "placeholders": {
+      "min": { "type": "int" }
+    }
+  },
+  "numberMustBeAtMost": "Number must be at most {max}",
+  "@numberMustBeAtMost": {
+    "placeholders": {
+      "max": { "type": "int" }
+    }
+  },
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "selectDays": "Select Days",
+  "enterDays": "Enter amount of Days"
+} 

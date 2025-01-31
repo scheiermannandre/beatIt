@@ -27,7 +27,7 @@ class NumberPicker extends StatefulWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Spacer(),
-          Text('Select Days'.hardcoded),
+          Text(context.l10n.selectDays),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
@@ -75,7 +75,7 @@ class NumberPicker extends StatefulWidget {
     return showDialog<int>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Enter number of days'.hardcoded),
+        title: Text(context.l10n.enterDays),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -92,13 +92,13 @@ class NumberPicker extends StatefulWidget {
                   validator: (value) {
                     final number = int.tryParse(value ?? '');
                     if (number == null) {
-                      return 'Please enter a valid number'.hardcoded;
+                      return context.l10n.pleaseEnterValidNumber;
                     }
                     if (number < minValue) {
-                      return 'Number must be at least $minValue'.hardcoded;
+                      return context.l10n.numberMustBeAtLeast(minValue);
                     }
                     if (number > maxValue) {
-                      return 'Number must be at most $maxValue'.hardcoded;
+                      return context.l10n.numberMustBeAtMost(maxValue);
                     }
 
                     return null;
@@ -115,7 +115,7 @@ class NumberPicker extends StatefulWidget {
             children: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text('Cancel'.hardcoded),
+                child: Text(context.l10n.cancel),
               ),
               const SizedBox(width: 8),
               FilledButton(
@@ -126,7 +126,7 @@ class NumberPicker extends StatefulWidget {
                   final number = int.tryParse(controller.text)!;
                   Navigator.pop(context, number);
                 },
-                child: Text('Confirm'.hardcoded),
+                child: Text(context.l10n.confirm),
               ),
             ],
           ),
@@ -260,7 +260,7 @@ class _NumberPickerDialogState extends State<_NumberPickerDialog> {
         const SizedBox(height: 24),
         FilledButton(
           onPressed: () => Navigator.pop(context, selectedValue),
-          child: Text('Confirm'.hardcoded),
+          child: Text(context.l10n.confirm),
         ),
       ],
     );

@@ -40,7 +40,7 @@ class AnimatedProgressIndicator extends HookConsumerWidget {
               ),
             ),
             Text(
-              '$percentage% left'.hardcoded,
+              context.l10n.percentageLeft(percentage),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],

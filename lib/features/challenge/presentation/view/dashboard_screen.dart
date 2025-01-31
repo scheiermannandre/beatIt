@@ -60,7 +60,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Beat It'.hardcoded),
+        title: Text(context.l10n.appTitle),
         actions: [
           IconButton(
             onPressed: () => context.pushCreateChallenge(),

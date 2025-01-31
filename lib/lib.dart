@@ -55,6 +55,7 @@ export 'foundation/utils/animation_effects/animation_effects.dart';
 export 'foundation/utils/animation_effects/size_effect.dart';
 export 'foundation/utils/extensions/animation_controller_extension.dart';
 export 'foundation/utils/extensions/async_value_extension.dart';
+export 'foundation/utils/extensions/build_context_extension.dart';
 export 'foundation/utils/extensions/color_extension.dart';
 export 'foundation/utils/extensions/datetime_extension.dart';
 export 'foundation/utils/extensions/extensions.dart';

@@ -6,6 +6,16 @@ enum ChallengeDurationLabel {
   weeks,
   months,
   years;
+
+  String getLabel(BuildContext context, int amount) {
+    final name = switch (this) {
+      days => context.l10n.day,
+      weeks => context.l10n.week,
+      months => context.l10n.month,
+      years => context.l10n.year,
+    };
+    return context.l10n.challengeDurationLabel(amount, name);
+  }
 }
 
 enum ChallengeDuration {
@@ -24,6 +34,6 @@ enum ChallengeDuration {
   final ChallengeDurationLabel label;
 
   String getLabel(BuildContext context) {
-    return '$uiAmount ${label.name.hardcoded}';
+    return label.getLabel(context, uiAmount);
   }
 }

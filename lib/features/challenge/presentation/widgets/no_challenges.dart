@@ -18,19 +18,19 @@ class NoChallenges extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'No challenges yet'.hardcoded,
+              context.l10n.uiNoChallenges,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 8),
             Text(
-              'Create your first challenge to get started'.hardcoded,
+              context.l10n.uiCreateFirstChallenge,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 24),
             FilledButton.icon(
               onPressed: onCreateChallenge,
               icon: const Icon(Icons.add),
-              label: Text('Create Challenge'.hardcoded),
+              label: Text(context.l10n.uiCreateChallenge),
             ),
           ],
         ),

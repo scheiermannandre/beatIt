@@ -54,7 +54,7 @@ class UncheckedChallengesBottomSheet extends HookConsumerWidget {
               ? () async => closeClicked(ref, context, viewModel)
               : null,
           isLoading: viewModel.closeCommand.isExecuting.value,
-          child: Text('Close'.hardcoded),
+          child: Text(context.l10n.close),
         ),
         Button.primary(
           onPressed: !viewModel.closeCommand.isExecuting.value &&
@@ -63,7 +63,7 @@ class UncheckedChallengesBottomSheet extends HookConsumerWidget {
                   viewModel.checkChallengesCommand.execute(uncheckedChallenges)
               : null,
           isLoading: viewModel.checkChallengesCommand.isExecuting.value,
-          child: Text('Check All'.hardcoded),
+          child: Text(context.l10n.checkAll),
         ),
       ],
     );
@@ -96,8 +96,9 @@ class UncheckedChallengesBottomSheet extends HookConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          'You have ${stillUncheckedChallenges.length} unchecked Challenges'
-              .hardcoded,
+          context.l10n.uncheckedChallengesWarningTitle(
+            stillUncheckedChallenges.length,
+          ),
           textAlign: TextAlign.center,
         ),
         content: SingleChildScrollView(
@@ -106,12 +107,11 @@ class UncheckedChallengesBottomSheet extends HookConsumerWidget {
             spacing: _warnDialogSpacing,
             children: [
               Text(
-                '''Depending on your settings, you will either start certain challenges from the beginning or when still available grace days will be applied otherwise those Challenges will be archived. '''
-                    .hardcoded,
+                context.l10n.uncheckedChallengesWarningMessage,
                 textAlign: TextAlign.center,
               ),
               Text(
-                'Do you want to continue?'.hardcoded,
+                context.l10n.uncheckedChallengesWarningQuestion,
                 textAlign: TextAlign.center,
               ),
             ],
@@ -120,11 +120,11 @@ class UncheckedChallengesBottomSheet extends HookConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text('Cancel'.hardcoded),
+            child: Text(context.l10n.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text('Continue'.hardcoded),
+            child: Text(context.l10n.continueText),
           ),
         ],
       ),
@@ -162,7 +162,7 @@ class UncheckedChallengesBottomSheet extends HookConsumerWidget {
       showAdaptiveBottomSheet<void>(
         context: context,
         isDismissible: false,
-        title: Text('Unchecked Challenges from Yesterday'.hardcoded),
+        title: Text(context.l10n.uncheckedChallengesTitle),
         child: UncheckedChallengesBottomSheet._(
           uncheckedChallenges: uncheckedChallenges,
         ),

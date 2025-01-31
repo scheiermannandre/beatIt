@@ -49,8 +49,11 @@ class ChallengeDetailsScreen extends HookConsumerWidget {
             children: [
               ListTile(
                 title: Text(
-                  '''I committed to ${challenge.title} for ${challenge.targetDays} days, starting from ${DateFormat.yMMMd().format(challenge.startDate.toLocal())}.'''
-                      .hardcoded,
+                  context.l10n.challengeCommitmentText(
+                    challenge.title,
+                    challenge.targetDays,
+                    DateFormat.yMMMd().format(challenge.startDate.toLocal()),
+                  ),
                 ),
                 subtitle: Padding(
                   padding: _indicatorPadding,
@@ -66,15 +69,15 @@ class ChallengeDetailsScreen extends HookConsumerWidget {
                   challengeId: challengeId,
                   enable: value,
                 ),
-                title: Text('Start over when breaking the streak'.hardcoded),
+                title: Text(context.l10n.startOverWhenBreaking),
               ),
               ListTile(
-                title: Text('Current streak'.hardcoded),
-                subtitle: Text('${challenge.currentStreak} days'),
+                title: Text(context.l10n.currentStreakTitle),
+                subtitle: Text(context.l10n.streak(challenge.currentStreak)),
               ),
               ListTile(
-                title: Text('Best streak'.hardcoded),
-                subtitle: Text('${challenge.bestStreak} days'),
+                title: Text(context.l10n.bestStreakTitle),
+                subtitle: Text(context.l10n.streak(challenge.bestStreak)),
               ),
               Animate(
                 effects: _fadeSlideEffects,
@@ -82,10 +85,12 @@ class ChallengeDetailsScreen extends HookConsumerWidget {
                 autoPlay: false,
                 child: ListTile(
                   key: const ValueKey('grace_days'),
-                  title: Text('Grace days spent'.hardcoded),
+                  title: Text(context.l10n.graceDaysSpent),
                   trailing: Text(
-                    '${challenge.graceDaysSpent}/${ChallengeModel.maxGraceDayCount}'
-                        .hardcoded,
+                    context.l10n.graceDaysCount(
+                      challenge.graceDaysSpent,
+                      ChallengeModel.maxGraceDayCount,
+                    ),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
@@ -96,9 +101,9 @@ class ChallengeDetailsScreen extends HookConsumerWidget {
                 autoPlay: false,
                 child: ListTile(
                   key: const ValueKey('current_attempt'),
-                  title: Text('Current attempt'.hardcoded),
+                  title: Text(context.l10n.currentAttempt),
                   trailing: Text(
-                    challenge.numberOfAttempts.toString(),
+                    '${challenge.numberOfAttempts}',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
@@ -111,7 +116,7 @@ class ChallengeDetailsScreen extends HookConsumerWidget {
                 onPressed: () =>
                     challengeViewModel.archiveChallengeCommand.execute(),
                 icon: const Icon(Icons.delete_outline_rounded),
-                label: Text('Archive Challenge'.hardcoded),
+                label: Text(context.l10n.archiveChallenge),
               ),
             ],
           ),

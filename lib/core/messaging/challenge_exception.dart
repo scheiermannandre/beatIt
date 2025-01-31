@@ -7,7 +7,6 @@ enum ChallengeExceptionType {
   failedToArchive,
   failedToGet,
   failedToUpdate,
-  failedToDelete,
   failedToBreak,
   dateOutsideChallengePeriod,
   invalidDuration,
@@ -46,11 +45,6 @@ final class ChallengeException extends AppException {
           type: ChallengeExceptionType.failedToUpdate,
           messageParameters: const [],
         );
-  const ChallengeException.failedToDelete()
-      : this._(
-          type: ChallengeExceptionType.failedToDelete,
-          messageParameters: const [],
-        );
   const ChallengeException.failedToBreak()
       : this._(
           type: ChallengeExceptionType.failedToBreak,
@@ -84,20 +78,22 @@ final class ChallengeException extends AppException {
 
   @override
   String message(BuildContext context) => switch (_type) {
-        ChallengeExceptionType.failedToCreate => 'Failed to create challenge',
-        ChallengeExceptionType.failedToCheck => 'Failed to check challenge',
-        ChallengeExceptionType.failedToArchive => 'Failed to archive challenge',
-        ChallengeExceptionType.failedToGet => 'Failed to get challenge',
-        ChallengeExceptionType.failedToUpdate => 'Failed to update challenge',
-        ChallengeExceptionType.failedToDelete => 'Failed to delete challenge',
-        ChallengeExceptionType.failedToBreak => 'Failed to break challenge',
+        ChallengeExceptionType.failedToCreate =>
+          context.l10n.errorFailedToCreate,
+        ChallengeExceptionType.failedToCheck => context.l10n.errorFailedToCheck,
+        ChallengeExceptionType.failedToArchive =>
+          context.l10n.errorFailedToArchive,
+        ChallengeExceptionType.failedToGet => context.l10n.errorFailedToGet,
+        ChallengeExceptionType.failedToUpdate =>
+          context.l10n.errorFailedToUpdate,
+        ChallengeExceptionType.failedToBreak => context.l10n.errorFailedToBreak,
         ChallengeExceptionType.dateOutsideChallengePeriod =>
-          'Date is outside challenge period',
+          context.l10n.errorDateOutsideChallengePeriod,
         ChallengeExceptionType.invalidDuration =>
-          'Challenge duration must be greater than 0',
+          context.l10n.errorInvalidDuration,
         ChallengeExceptionType.failedToCheckMany =>
-          'Failed to check many challenges ${_messageParameters[0]}',
+          context.l10n.errorFailedToCheckMany(_messageParameters[0]),
         ChallengeExceptionType.failedToBreakOneOrMany =>
-          'Failed to break many challenges ${_messageParameters[0]}',
+          context.l10n.errorFailedToBreakMany(_messageParameters[0]),
       };
 }

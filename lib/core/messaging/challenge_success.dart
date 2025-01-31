@@ -26,12 +26,12 @@ final class ChallengeSuccess extends AppSuccess {
   @override
   String message(BuildContext context) => switch (_type) {
         ChallengeMessageType.empty => '',
-        ChallengeMessageType.created => 'Challenge created successfully',
-        ChallengeMessageType.checked => 'Challenge checked successfully',
-        ChallengeMessageType.archived => 'Challenge archived successfully',
+        ChallengeMessageType.created => context.l10n.successChallengeCreated,
+        ChallengeMessageType.checked => context.l10n.successChallengeChecked,
+        ChallengeMessageType.archived => context.l10n.successChallengeArchived,
         ChallengeMessageType.batchChecked =>
-          'All challenges checked successfully',
+          context.l10n.successChallengesBatchChecked,
         ChallengeMessageType.batchBroken =>
-          'All challenges broken successfully',
+          context.l10n.successChallengesBatchBroken,
       };
 }
