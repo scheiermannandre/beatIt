@@ -29,7 +29,8 @@ dependencies:
   watch_it: ^1.6.2
 
 dev_dependencies: 
-  custom_lint: ^0.7.0
+  custom_lint: ^0.7.0  
+  flutter_launcher_icons: ^0.13.1
   flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
@@ -40,3 +41,11 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/app_icon/app_icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  remove_alpha_ios: true
+  adaptive_icon_foreground: "assets/app_icon/app_icon.png"
