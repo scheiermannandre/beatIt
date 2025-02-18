@@ -39,7 +39,7 @@ class _ChallengeWidgetState extends ConsumerState<ChallengeWidget> with Automati
 
     // Check if challenge was broken (grace days spent)
     if (challengeModel.areGraceDaysSpent) {
-      return ' ❌ '; // Failed
+      return ' 💔 '; // Failed
     } else {
       return ' 🗑️ '; // Archived/Deleted
     }
@@ -86,7 +86,9 @@ class _ChallengeWidgetState extends ConsumerState<ChallengeWidget> with Automati
                             color: Theme.of(context).colorScheme.primary,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Text(
+                          child:
+                              //_getStatusIcon(challenge),
+                              Text(
                             _getStatusEmoji(challenge),
                             style: const TextStyle(fontSize: 16),
                             textAlign: TextAlign.center,

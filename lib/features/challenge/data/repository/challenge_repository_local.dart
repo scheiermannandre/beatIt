@@ -128,13 +128,23 @@ class ChallengeRepositoryLocal extends ChallengeRepository {
       return const Failure(ChallengeException.dateOutsideChallengePeriod());
     }
 
-    final updatedChallenge = _updateChallengeDay(currentChallenge, date);
+    var updatedChallenge = _updateChallengeDay(currentChallenge, date);
     final updateResult = await _service.updateChallenge(updatedChallenge);
-
     if (updateResult.isSuccess()) {
       updateCache(challengeId, updateResult.getOrThrow());
     }
-    return updateResult;
+
+    updatedChallenge = updateResult.getOrThrow();
+    // Check if challenge is completed (completed days = target days - grace days spent)
+    final completedDays = updatedChallenge.days.where((day) => day.status == DayStatus.completed).length;
+    if (completedDays == updatedChallenge.targetDays - updatedChallenge.graceDaysSpent) {
+      final archiveResult = await archiveChallenge(challengeId: challengeId);
+      if (archiveResult.isError()) {
+        return Failure(archiveResult.exceptionOrNull()!);
+      }
+    }
+    await getChallenges();
+    return Success(updatedChallenge);
   }
 
   /// Creates a new challenge and caches it.
