@@ -86,8 +86,10 @@ class ChallengeRepositoryLocal extends ChallengeRepository {
       // Skip if already archived
       if (challenge.isArchived ?? false) return false;
 
-      // Check if challenge end date is in the past
-      final endDate = challenge.startDate.add(Duration(days: challenge.targetDays - 1));
+      // Check if challenge end date is in the past for 2+ days
+      // yesterday is not included, because it first needs to go through
+      // the users evaluation if done or not done via bottom sheet
+      final endDate = challenge.startDate.add(Duration(days: challenge.targetDays - 2));
       return endDate.withoutTime.isBefore(now.withoutTime);
     }).toList();
 
