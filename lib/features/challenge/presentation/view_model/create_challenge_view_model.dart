@@ -16,17 +16,14 @@ typedef CreateChallengeParams = ({
 });
 
 @riverpod
-class CreateChallengeViewModel extends _$CreateChallengeViewModel
-    with MessageNotifierMixin {
-  late final Command<CreateChallengeParams, Result<Unit>>
-      createChallengeCommand;
+class CreateChallengeViewModel extends _$CreateChallengeViewModel with MessageNotifierMixin {
+  late final Command<CreateChallengeParams, Result<Unit>> createChallengeCommand;
   late final ChallengeRepository _challengeRepository;
   @override
   FutureOr<void> build() {
     // Initial state
     _challengeRepository = ref.read(challengeRepositoryProvider);
-    createChallengeCommand =
-        Command.createAsync<CreateChallengeParams, Result<Unit>>(
+    createChallengeCommand = Command.createAsync<CreateChallengeParams, Result<Unit>>(
       (params) => _createChallenge(
         name: params.name,
         duration: params.duration,
@@ -50,14 +47,13 @@ class CreateChallengeViewModel extends _$CreateChallengeViewModel
     final challenge = ChallengeModel.withId(
       title: name,
       targetDays: duration,
-      startDate: startDate.subtract(const Duration(days: 1)),
+      startDate: startDate,
       days: const [],
       startOverEnabled: startOverEnabled,
       createdAt: now,
     );
 
-    final result =
-        await _challengeRepository.createChallenge(challenge: challenge);
+    final result = await _challengeRepository.createChallenge(challenge: challenge);
     return result.fold(
       (success) {
         state = const AsyncData(null);

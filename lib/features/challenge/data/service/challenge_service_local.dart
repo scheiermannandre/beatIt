@@ -11,16 +11,11 @@ class ChallengeServiceLocal {
   ChallengeServiceLocal();
 
   static const _boxName = 'challenges';
-  static const _archiveBoxName = 'archived_challenges';
 
   Box<ChallengeDto>? _box;
-  Box<ChallengeDto>? _archiveBox;
 
-  Future<Box<ChallengeDto>> _getBox(String name) async {
-    if (name == _boxName) {
-      return _box ??= await Hive.openBox<ChallengeDto>(name);
-    }
-    return _archiveBox ??= await Hive.openBox<ChallengeDto>(name);
+  Future<Box<ChallengeDto>> _getBox() async {
+    return _box ??= await Hive.openBox<ChallengeDto>(_boxName);
   }
 
   Future<Result<T>> _handleOperation<T extends Object>({
@@ -37,7 +32,7 @@ class ChallengeServiceLocal {
 
   AsyncResult<List<ChallengeModel>> getChallenges() => _handleOperation(
         operation: () async {
-          final box = await _getBox(_boxName);
+          final box = await _getBox();
           return box.values.map((dto) => dto.toModel()).toList();
         },
         error: const ChallengeException.failedToGet(),
@@ -45,7 +40,7 @@ class ChallengeServiceLocal {
 
   AsyncResult<ChallengeModel> getChallengeById(String id) => _handleOperation(
         operation: () async {
-          final box = await _getBox(_boxName);
+          final box = await _getBox();
           final challenge = box.get(id);
           if (challenge == null) throw const ChallengeException.failedToGet();
           return challenge.toModel();
@@ -53,53 +48,49 @@ class ChallengeServiceLocal {
         error: const ChallengeException.failedToGet(),
       );
 
-  AsyncResult<ChallengeModel> createChallenge(ChallengeModel challenge) =>
-      _handleOperation(
+  AsyncResult<ChallengeModel> createChallenge(ChallengeModel challenge) => _handleOperation(
         operation: () async {
-          final box = await _getBox(_boxName);
+          final box = await _getBox();
           await box.put(challenge.id, ChallengeDto.fromModel(challenge));
           return challenge;
         },
         error: const ChallengeException.failedToCreate(),
       );
 
-  AsyncResult<ChallengeModel> updateChallenge(ChallengeModel challenge) =>
-      _handleOperation(
+  AsyncResult<ChallengeModel> updateChallenge(ChallengeModel challenge) => _handleOperation(
         operation: () async {
-          final box = await _getBox(_boxName);
+          final box = await _getBox();
           await box.put(challenge.id, ChallengeDto.fromModel(challenge));
           return challenge;
         },
         error: const ChallengeException.failedToUpdate(),
       );
 
-  AsyncResult<void> archiveChallenge(String id) => _handleOperation(
-        operation: () async {
-          final box = await _getBox(_boxName);
-          final archiveBox = await _getBox(_archiveBoxName);
-          final dto = box.get(id);
+  // AsyncResult<void> archiveChallenge(String id) => _handleOperation(
+  //       operation: () async {
+  //         final box = await _getBox();
+  //         final archiveBox = await _getBox(_archiveBoxName);
+  //         final dto = box.get(id);
 
-          if (dto == null) throw const ChallengeException.failedToGet();
+  //         if (dto == null) throw const ChallengeException.failedToGet();
 
-          final transaction = HiveTransaction<ChallengeDto>();
-          await transaction.delete(box, id);
-          await transaction.put(archiveBox, id, dto);
-          await transaction.commit();
+  //         final transaction = HiveTransaction<ChallengeDto>();
+  //         await transaction.delete(box, id);
+  //         await transaction.put(archiveBox, id, dto);
+  //         await transaction.commit();
 
-          return unit;
-        },
-        error: const ChallengeException.failedToArchive(),
-      );
+  //         return unit;
+  //       },
+  //       error: const ChallengeException.failedToArchive(),
+  //     );
 
   Future<void> onDispose() async {
     await Future.wait(
       [
         _box?.close(),
-        _archiveBox?.close(),
       ].whereType<Future<dynamic>>(),
     );
     _box = null;
-    _archiveBox = null;
   }
 }
 

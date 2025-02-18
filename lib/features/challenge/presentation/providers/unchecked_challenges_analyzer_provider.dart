@@ -18,8 +18,6 @@ class UncheckedChallengesAnalyzer extends _$UncheckedChallengesAnalyzer {
     }
 
     final lastCheck = this.lastCheck!;
-    state = now.year != lastCheck.year ||
-        now.month != lastCheck.month ||
-        now.day != lastCheck.day;
+    state = now.year != lastCheck.year || now.month != lastCheck.month || now.day != lastCheck.day;
   }
 }

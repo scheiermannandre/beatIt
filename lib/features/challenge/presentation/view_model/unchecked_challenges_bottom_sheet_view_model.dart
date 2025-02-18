@@ -10,8 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'unchecked_challenges_bottom_sheet_view_model.g.dart';
 
 @riverpod
-class UncheckedChallengesBottomSheetViewModel
-    extends _$UncheckedChallengesBottomSheetViewModel
+class UncheckedChallengesBottomSheetViewModel extends _$UncheckedChallengesBottomSheetViewModel
     with MessageNotifierMixin {
   late final ChallengeRepository _repository;
 
@@ -21,8 +20,7 @@ class UncheckedChallengesBottomSheetViewModel
   FutureOr<void> build() {
     _repository = ref.read(challengeRepositoryProvider);
     checkChallengesCommand = Command.createAsync(
-      (uncheckedChallenges) =>
-          checkChallenges(uncheckedChallenges: uncheckedChallenges),
+      (uncheckedChallenges) => checkChallenges(uncheckedChallenges: uncheckedChallenges),
       initialValue: true,
     );
     closeCommand = Command.createAsync(
@@ -36,8 +34,7 @@ class UncheckedChallengesBottomSheetViewModel
   }) async {
     final date = DateTime.now().subtract(const Duration(days: 1));
     state = const AsyncLoading();
-    final results = await AsyncValue.guard<
-        List<(ChallengeModel, ResultDart<ChallengeModel, Exception>)>>(
+    final results = await AsyncValue.guard<List<(ChallengeModel, ResultDart<ChallengeModel, Exception>)>>(
       () => Future.wait(
         uncheckedChallenges.map(
           (challenge) => _repository
@@ -72,13 +69,11 @@ class UncheckedChallengesBottomSheetViewModel
     required List<ChallengeModel> uncheckedChallenges,
   }) async {
     state = const AsyncLoading();
-    final results = await AsyncValue.guard<
-        List<(ChallengeModel, ResultDart<Unit, Exception>)>>(
+    final results = await AsyncValue.guard<List<(ChallengeModel, ResultDart<Unit, Exception>)>>(
       () => Future.wait(
         uncheckedChallenges.map(
-          (challenge) => _repository
-              .breakChallengeIfNeeded(challengeId: challenge.id)
-              .then((result) => (challenge, result)),
+          (challenge) =>
+              _repository.breakChallengeIfNeeded(challengeId: challenge.id).then((result) => (challenge, result)),
         ),
       ),
     );

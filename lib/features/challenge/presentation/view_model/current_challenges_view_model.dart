@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:beat_it/features/challenge/challenge.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'dashboard_view_model.g.dart';
+part 'current_challenges_view_model.g.dart';
 
 @riverpod
-class DashboardViewModel extends _$DashboardViewModel {
+class CurrentChallengesViewModel extends _$CurrentChallengesViewModel {
   late final StreamSubscription<List<ChallengeModel>> _subscription;
 
   @override
@@ -28,7 +28,7 @@ class DashboardViewModel extends _$DashboardViewModel {
 
   Future<List<ChallengeModel>> _getChallenges() async {
     final repository = ref.read(challengeRepositoryProvider);
-    final result = await repository.getChallenges();
+    final result = await repository.getCurrentChallenges();
 
     return result.fold(
       (data) => data,

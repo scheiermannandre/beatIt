@@ -10,10 +10,10 @@ test: ## run tests
 
 lint: ## lint and autoformat this project
 	flutter analyze
-	dart format --set-exit-if-changed .
+	dart format --line-length 120 --set-exit-if-changed .
 
 format: ## lint and autoformat this project
-	dart format .
+	dart format --line-length 120 .
 
 locale: ## generate locale files
 	flutter gen-l10n
@@ -31,5 +31,5 @@ wgenerate: ## run build runner in watch mode
 
 prepareCommit: ## prepare commit
 	flutter analyze
-	dart format --set-exit-if-changed .
+	dart format --line-length 120 --set-exit-if-changed .
 	flutter test --coverage

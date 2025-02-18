@@ -56,8 +56,7 @@ class ChallengeModel {
     );
   }
 
-  factory ChallengeModel.fromJson(String source) =>
-      ChallengeModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ChallengeModel.fromJson(String source) => ChallengeModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   static const maxGraceDayCount = 3;
   final String id;
@@ -65,8 +64,7 @@ class ChallengeModel {
   final int targetDays;
   final DateTime startDate;
   final List<DayModel> _days;
-  List<DayModel> get days =>
-      List<DayModel>.from(_days)..sort((a, b) => a.date.compareTo(b.date));
+  List<DayModel> get days => List<DayModel>.from(_days)..sort((a, b) => a.date.compareTo(b.date));
 
   final DateTime? lastCompletedDate;
   final bool? isArchived;
@@ -171,10 +169,7 @@ extension ChallengeModelX on ChallengeModel {
   bool isDayCompleted({required DateTime date}) {
     return _days.any(
       (day) =>
-          day.isCompleted &&
-          day.date.year == date.year &&
-          day.date.month == date.month &&
-          day.date.day == date.day,
+          day.isCompleted && day.date.year == date.year && day.date.month == date.month && day.date.day == date.day,
     );
   }
 
@@ -183,8 +178,7 @@ extension ChallengeModelX on ChallengeModel {
 
     var currentStreak = 0;
     var maxStreak = 0;
-    final sortedDays = List<DayModel>.from(_days)
-      ..sort((DayModel a, DayModel b) => a.date.compareTo(b.date));
+    final sortedDays = List<DayModel>.from(_days)..sort((DayModel a, DayModel b) => a.date.compareTo(b.date));
 
     for (final day in sortedDays) {
       if (day.isCompleted) {
@@ -201,8 +195,7 @@ extension ChallengeModelX on ChallengeModel {
   int get currentStreak {
     if (_days.isEmpty) return 0;
     var currentStreak = 0;
-    final sortedDays = List<DayModel>.from(_days)
-      ..sort((DayModel a, DayModel b) => a.date.compareTo(b.date));
+    final sortedDays = List<DayModel>.from(_days)..sort((DayModel a, DayModel b) => a.date.compareTo(b.date));
 
     for (final day in sortedDays) {
       if (day.isCompleted) {
@@ -212,21 +205,15 @@ extension ChallengeModelX on ChallengeModel {
     return currentStreak;
   }
 
-  bool get areGraceDaysSpent =>
-      graceDaysSpent > ChallengeModel.maxGraceDayCount;
+  bool get areGraceDaysSpent => graceDaysSpent > ChallengeModel.maxGraceDayCount;
 
   bool get isYesterdayCompleted => _days.any(
         (day) =>
-            day.date.withoutTime ==
-                DateTime.now().subtract(const Duration(days: 1)).withoutTime &&
-            day.isCompleted,
+            day.date.withoutTime == DateTime.now().subtract(const Duration(days: 1)).withoutTime && day.isCompleted,
       );
 
   bool get isYesterdaySkipped => _days.any(
-        (day) =>
-            day.date.withoutTime ==
-                DateTime.now().subtract(const Duration(days: 1)).withoutTime &&
-            day.isSkipped,
+        (day) => day.date.withoutTime == DateTime.now().subtract(const Duration(days: 1)).withoutTime && day.isSkipped,
       );
 
   // List<DayModel> get sortedDays => List<DayModel>.from(days)
@@ -253,8 +240,7 @@ class DayModel {
     );
   }
 
-  factory DayModel.fromJson(String source) =>
-      DayModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory DayModel.fromJson(String source) => DayModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   final DateTime date;
   final DayStatus status;

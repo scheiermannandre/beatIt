@@ -20,8 +20,7 @@ class UnboundedNotDismissingBouncingScrollPhysics extends ScrollPhysics {
   }
 
   @override
-  double applyPhysicsToUserOffset(ScrollMetrics position, double offset) =>
-      offset;
+  double applyPhysicsToUserOffset(ScrollMetrics position, double offset) => offset;
 
   @override
   bool shouldAcceptUserOffset(ScrollMetrics position) => true;
@@ -77,8 +76,7 @@ class UnboundedBouncingScrollPhysics extends ScrollPhysics {
   }
 
   @override
-  double applyPhysicsToUserOffset(ScrollMetrics position, double offset) =>
-      offset;
+  double applyPhysicsToUserOffset(ScrollMetrics position, double offset) => offset;
 
   @override
   bool shouldAcceptUserOffset(ScrollMetrics position) => true;

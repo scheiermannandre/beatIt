@@ -21,22 +21,19 @@ class ChallengeWidget extends ConsumerStatefulWidget {
   ConsumerState<ChallengeWidget> createState() => _ChallengeWidgetState();
 }
 
-class _ChallengeWidgetState extends ConsumerState<ChallengeWidget>
-    with AutomaticKeepAliveClientMixin {
+class _ChallengeWidgetState extends ConsumerState<ChallengeWidget> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true; // Keep widget alive when scrolled away
 
   String _formatDate(DateTime date, BuildContext context) {
-    return DateFormat.yMMMd(Localizations.localeOf(context).languageCode)
-        .format(date);
+    return DateFormat.yMMMd(Localizations.localeOf(context).languageCode).format(date);
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context); // Required by AutomaticKeepAliveClientMixin
 
-    final challengeAsyncValue =
-        ref.watch(challengeViewModelProvider(widget.challengeId));
+    final challengeAsyncValue = ref.watch(challengeViewModelProvider(widget.challengeId));
 
     return challengeAsyncValue.whenWithData(
       (challenge) {
@@ -104,11 +101,9 @@ class _BoxesGrid extends StatelessWidget {
           const columns = 7;
           final rows = (challengeModel.targetDays / columns).ceil();
           final availableWidth = constraints.maxWidth / columns;
-          final actualSpacing =
-              availableWidth < (boxSize + spacing) ? minSpacing : spacing;
+          final actualSpacing = availableWidth < (boxSize + spacing) ? minSpacing : spacing;
 
-          final gridWidth =
-              (columns * boxSize) + ((columns - 1) * actualSpacing);
+          final gridWidth = (columns * boxSize) + ((columns - 1) * actualSpacing);
           final gridHeight = (rows * boxSize) + ((rows - 1) * actualSpacing);
 
           return SizedBox(
@@ -124,14 +119,12 @@ class _BoxesGrid extends StatelessWidget {
               ),
               itemCount: challengeModel.targetDays,
               itemBuilder: (context, index) {
-                final date =
-                    challengeModel.startDate.add(Duration(days: index));
+                final date = challengeModel.startDate.add(Duration(days: index));
                 return _Box(
                   status: challengeModel.days
                       .firstWhere(
                         (day) => day.date.withoutTime == date.withoutTime,
-                        orElse: () =>
-                            DayModel(date: date, status: DayStatus.none),
+                        orElse: () => DayModel(date: date, status: DayStatus.none),
                       )
                       .status,
                 );
@@ -142,8 +135,7 @@ class _BoxesGrid extends StatelessWidget {
 
         const rows = 7;
         final availableHeight = constraints.maxHeight / rows;
-        final actualSpacing =
-            availableHeight < (boxSize + spacing) ? minSpacing : spacing;
+        final actualSpacing = availableHeight < (boxSize + spacing) ? minSpacing : spacing;
         final gridHeight = (rows * boxSize) + ((rows - 1) * actualSpacing);
 
         return SizedBox(
@@ -166,8 +158,7 @@ class _BoxesGrid extends StatelessWidget {
                   status: challengeModel.days
                       .firstWhere(
                         (day) => day.date.withoutTime == date.withoutTime,
-                        orElse: () =>
-                            DayModel(date: date, status: DayStatus.none),
+                        orElse: () => DayModel(date: date, status: DayStatus.none),
                       )
                       .status,
                 ),
@@ -209,9 +200,7 @@ class _Box extends StatelessWidget {
         color: getColor(),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: status == DayStatus.skipped
-          ? const Icon(Icons.close, color: Colors.white, size: boxSize)
-          : null,
+      child: status == DayStatus.skipped ? const Icon(Icons.close, color: Colors.white, size: boxSize) : null,
     );
   }
 }
@@ -227,11 +216,8 @@ class _ChallengeTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final completedChallenges =
-        challengeModel.days.where((day) => day.isCompleted).length;
-    final progress = challengeModel.targetDays > 0
-        ? completedChallenges / challengeModel.targetDays
-        : 0.0;
+    final completedChallenges = challengeModel.days.where((day) => day.isCompleted).length;
+    final progress = challengeModel.targetDays > 0 ? completedChallenges / challengeModel.targetDays : 0.0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

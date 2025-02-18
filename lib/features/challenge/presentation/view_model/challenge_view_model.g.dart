@@ -6,8 +6,7 @@ part of 'challenge_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$challengeViewModelHash() =>
-    r'71c74c74f97e83acec065900fdc2475fa75e56e9';
+String _$challengeViewModelHash() => r'be3eae8f1fcf5e2595807f9be579ddd1fbb38488';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,8 +29,7 @@ class _SystemHash {
   }
 }
 
-abstract class _$ChallengeViewModel
-    extends BuildlessAutoDisposeAsyncNotifier<ChallengeModel> {
+abstract class _$ChallengeViewModel extends BuildlessAutoDisposeAsyncNotifier<ChallengeModel> {
   late final String challengeId;
 
   FutureOr<ChallengeModel> build(
@@ -74,16 +72,14 @@ class ChallengeViewModelFamily extends Family<AsyncValue<ChallengeModel>> {
   static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies => _allTransitiveDependencies;
 
   @override
   String? get name => r'challengeViewModelProvider';
 }
 
 /// See also [ChallengeViewModel].
-class ChallengeViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
-    ChallengeViewModel, ChallengeModel> {
+class ChallengeViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<ChallengeViewModel, ChallengeModel> {
   /// See also [ChallengeViewModel].
   ChallengeViewModelProvider(
     String challengeId,
@@ -91,13 +87,9 @@ class ChallengeViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
           () => ChallengeViewModel()..challengeId = challengeId,
           from: challengeViewModelProvider,
           name: r'challengeViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$challengeViewModelHash,
+          debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$challengeViewModelHash,
           dependencies: ChallengeViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              ChallengeViewModelFamily._allTransitiveDependencies,
+          allTransitiveDependencies: ChallengeViewModelFamily._allTransitiveDependencies,
           challengeId: challengeId,
         );
 
@@ -139,15 +131,13 @@ class ChallengeViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<ChallengeViewModel, ChallengeModel>
-      createElement() {
+  AutoDisposeAsyncNotifierProviderElement<ChallengeViewModel, ChallengeModel> createElement() {
     return _ChallengeViewModelProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is ChallengeViewModelProvider &&
-        other.challengeId == challengeId;
+    return other is ChallengeViewModelProvider && other.challengeId == challengeId;
   }
 
   @override
@@ -161,15 +151,13 @@ class ChallengeViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin ChallengeViewModelRef
-    on AutoDisposeAsyncNotifierProviderRef<ChallengeModel> {
+mixin ChallengeViewModelRef on AutoDisposeAsyncNotifierProviderRef<ChallengeModel> {
   /// The parameter `challengeId` of this provider.
   String get challengeId;
 }
 
 class _ChallengeViewModelProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<ChallengeViewModel,
-        ChallengeModel> with ChallengeViewModelRef {
+    extends AutoDisposeAsyncNotifierProviderElement<ChallengeViewModel, ChallengeModel> with ChallengeViewModelRef {
   _ChallengeViewModelProviderElement(super.provider);
 
   @override

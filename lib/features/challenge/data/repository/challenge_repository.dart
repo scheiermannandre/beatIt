@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:beat_it/core/core.dart';
 import 'package:beat_it/features/challenge/challenge.dart';
+import 'package:beat_it/foundation/foundation.dart';
 import 'package:result_dart/result_dart.dart';
 
 /// Repository for managing challenges with caching and real-time updates.
@@ -16,20 +17,37 @@ abstract class ChallengeRepository {
   /// The stream emits a new value whenever:
   /// - A challenge is created, updated, or deleted
   /// - The cache is updated via [updateCache] or [updateCacheInBatch]
-  Stream<List<ChallengeModel>> observeChallenges() =>
-      _challengesController.stream;
+  Stream<List<ChallengeModel>> observeChallenges() => _challengesController.stream;
 
-  final _challengesController =
-      StreamController<List<ChallengeModel>>.broadcast();
+  final _challengesController = StreamController<List<ChallengeModel>>.broadcast();
 
   final Map<String, ChallengeModel> _cache = {};
 
-  Stream<ChallengeModel> observeChallengeById(String id) =>
-      observeChallenges().map((challenges) {
+  Stream<ChallengeModel> observeChallengeById(String id) => observeChallenges().map((challenges) {
         return challenges.firstWhere(
           (c) => c.id == id,
           orElse: () => throw const ChallengeException.failedToGet(),
         );
+      });
+
+  Stream<List<ChallengeModel>> observeCurrentChallenges() => observeChallenges().map((challenges) {
+        return challenges
+            .where(
+              (c) => c.startDate.withoutTime.isBeforeOrAt(DateTime.now().withoutTime) && !(c.isArchived ?? false),
+            )
+            .toList();
+      });
+
+  Stream<List<ChallengeModel>> observeArchivedChallenges() => observeChallenges().map((challenges) {
+        return challenges.where((c) => c.isArchived ?? false).toList();
+      });
+
+  Stream<List<ChallengeModel>> observeFutureChallenges() => observeChallenges().map((challenges) {
+        return challenges
+            .where(
+              (c) => c.startDate.withoutTime.isAfter(DateTime.now().withoutTime) && !(c.isArchived ?? false),
+            )
+            .toList();
       });
 
   AsyncResult<ChallengeModel> getChallengeById(String id) async {
@@ -43,6 +61,11 @@ abstract class ChallengeRepository {
   AsyncResult<Unit> createChallenge({
     required ChallengeModel challenge,
   });
+
+  AsyncResult<List<ChallengeModel>> getFutureChallenges();
+  AsyncResult<List<ChallengeModel>> getCurrentChallenges();
+  AsyncResult<List<ChallengeModel>> getArchivedChallenges();
+
   AsyncResult<ChallengeModel> checkChallengeForDate({
     required String challengeId,
     required DateTime date,
@@ -79,6 +102,7 @@ abstract class ChallengeRepository {
   }
 
   void _emitCachedChallenges() {
+    if (_challengesController.isClosed) return;
     _challengesController.add(_cache.values.toList());
   }
 

@@ -27,19 +27,14 @@ class ChallengeDetailsScreen extends HookConsumerWidget {
   final String challengeId;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final challengeAsyncValue =
-        ref.watch(challengeViewModelProvider(challengeId));
-    final challengeViewModel =
-        ref.read(challengeViewModelProvider(challengeId).notifier);
+    final challengeAsyncValue = ref.watch(challengeViewModelProvider(challengeId));
+    final challengeViewModel = ref.read(challengeViewModelProvider(challengeId).notifier);
     _setupArchiveChallengeListener(challengeViewModel, context, ref);
     useMessageNotifier(context, challengeViewModel);
 
     return challengeAsyncValue.whenWithData((challenge) {
-      final completedChallenges =
-          challenge.days.where((day) => day.isCompleted).length;
-      final progress = challenge.targetDays > 0
-          ? completedChallenges / challenge.targetDays
-          : 0.0;
+      final completedChallenges = challenge.days.where((day) => day.isCompleted).length;
+      final progress = challenge.targetDays > 0 ? completedChallenges / challenge.targetDays : 0.0;
 
       return Scaffold(
         appBar: AppBar(),
@@ -113,8 +108,7 @@ class ChallengeDetailsScreen extends HookConsumerWidget {
           bottomSection: Column(
             children: [
               FilledButton.icon(
-                onPressed: () =>
-                    challengeViewModel.archiveChallengeCommand.execute(),
+                onPressed: () => challengeViewModel.archiveChallengeCommand.execute(),
                 icon: const Icon(Icons.delete_outline_rounded),
                 label: Text(context.l10n.archiveChallenge),
               ),
@@ -132,8 +126,7 @@ class ChallengeDetailsScreen extends HookConsumerWidget {
   ) {
     useEffect(
       () {
-        final subscription = challengeViewModel.archiveChallengeCommand.results
-            .listen((result, _) {
+        final subscription = challengeViewModel.archiveChallengeCommand.results.listen((result, _) {
           if (result.data?.isSuccess() ?? false) {
             context.pop();
           }

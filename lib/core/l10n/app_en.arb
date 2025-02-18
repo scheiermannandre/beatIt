@@ -43,7 +43,7 @@
   "successChallengeChecked": "Challenge checked successfully",
   "successChallengeArchived": "Challenge archived successfully",
   "successChallengesBatchChecked": "All challenges checked",
-  "successChallengesBatchBroken": "All challenges broken",
+  "successChallengesBatchBroken": "Challenges reset successfully",
   
   "day": "Day",
   "week": "Week",
@@ -141,5 +141,12 @@
   "confirm": "Confirm",
   "cancel": "Cancel",
   "selectDays": "Select Days",
-  "enterDays": "Enter amount of Days"
+  "enterDays": "Enter amount of Days",
+
+  "tabCurrent": "Current",
+  "tabFuture": "Future",
+  "tabArchived": "Archived",
+  "noCurrentChallenges": "No current challenges",
+  "noFutureChallenges": "No future challenges",
+  "noArchivedChallenges": "No archived challenges"
 } 

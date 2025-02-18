@@ -6,18 +6,14 @@ part of 'challenge_repository_local.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$challengeRepositoryHash() =>
-    r'b41a0a6f2633951168ef5549a899d6362d55429f';
+String _$challengeRepositoryHash() => r'085be74e79afc673023ec0292763240e9f47235f';
 
 /// See also [challengeRepository].
 @ProviderFor(challengeRepository)
-final challengeRepositoryProvider =
-    AutoDisposeProvider<ChallengeRepository>.internal(
+final challengeRepositoryProvider = AutoDisposeProvider<ChallengeRepository>.internal(
   challengeRepository,
   name: r'challengeRepositoryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$challengeRepositoryHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$challengeRepositoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

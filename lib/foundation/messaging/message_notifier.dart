@@ -35,13 +35,11 @@ mixin MessageNotifierMixin {
   final ValueNotifier<UIMessage?> _massageNotifier = ValueNotifier(null);
 
   void showSnackBar(AppMessage message) {
-    _massageNotifier.value =
-        UIMessage(message: message, type: MessageType.snackBar);
+    _massageNotifier.value = UIMessage(message: message, type: MessageType.snackBar);
   }
 
   void showDialog(AppMessage message) {
-    _massageNotifier.value =
-        UIMessage(message: message, type: MessageType.dialog);
+    _massageNotifier.value = UIMessage(message: message, type: MessageType.dialog);
   }
 }
 

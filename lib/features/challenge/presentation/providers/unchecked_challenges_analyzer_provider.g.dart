@@ -6,18 +6,14 @@ part of 'unchecked_challenges_analyzer_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$uncheckedChallengesAnalyzerHash() =>
-    r'0514ddb6725d3beec72799619d63a8ca0dfc4446';
+String _$uncheckedChallengesAnalyzerHash() => r'0514ddb6725d3beec72799619d63a8ca0dfc4446';
 
 /// See also [UncheckedChallengesAnalyzer].
 @ProviderFor(UncheckedChallengesAnalyzer)
-final uncheckedChallengesAnalyzerProvider =
-    NotifierProvider<UncheckedChallengesAnalyzer, bool>.internal(
+final uncheckedChallengesAnalyzerProvider = NotifierProvider<UncheckedChallengesAnalyzer, bool>.internal(
   UncheckedChallengesAnalyzer.new,
   name: r'uncheckedChallengesAnalyzerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$uncheckedChallengesAnalyzerHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$uncheckedChallengesAnalyzerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

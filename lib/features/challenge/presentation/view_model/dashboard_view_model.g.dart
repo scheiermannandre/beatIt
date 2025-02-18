@@ -6,18 +6,14 @@ part of 'dashboard_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dashboardViewModelHash() =>
-    r'a850929f016a190659ad3fbdeb0febbf76d0c685';
+String _$dashboardViewModelHash() => r'fba8ba3124594caa5ad5e8a0cbcec70bc7cf17bd';
 
 /// See also [DashboardViewModel].
 @ProviderFor(DashboardViewModel)
-final dashboardViewModelProvider = AutoDisposeAsyncNotifierProvider<
-    DashboardViewModel, List<ChallengeModel>>.internal(
+final dashboardViewModelProvider = AutoDisposeAsyncNotifierProvider<DashboardViewModel, List<ChallengeModel>>.internal(
   DashboardViewModel.new,
   name: r'dashboardViewModelProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$dashboardViewModelHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$dashboardViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

@@ -38,7 +38,7 @@ export 'features/challenge/presentation/view/unchecked_challenges_bottom_sheet.d
 export 'features/challenge/presentation/view/view.dart';
 export 'features/challenge/presentation/view_model/challenge_view_model.dart';
 export 'features/challenge/presentation/view_model/create_challenge_view_model.dart';
-export 'features/challenge/presentation/view_model/dashboard_view_model.dart';
+export 'features/challenge/presentation/view_model/current_challenges_view_model.dart';
 export 'features/challenge/presentation/view_model/unchecked_challenges_bottom_sheet_view_model.dart';
 export 'features/challenge/presentation/view_model/view_model.dart';
 export 'features/challenge/presentation/widgets/animated_progress_indicator.dart';

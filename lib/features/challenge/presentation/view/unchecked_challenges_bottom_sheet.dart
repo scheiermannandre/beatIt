@@ -24,8 +24,7 @@ class UncheckedChallengesBottomSheet extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final date = DateTime.now().subtract(const Duration(days: 1));
     ref.watch(uncheckedChallengesBottomSheetViewModelProvider);
-    final viewModel =
-        ref.watch(uncheckedChallengesBottomSheetViewModelProvider.notifier);
+    final viewModel = ref.watch(uncheckedChallengesBottomSheetViewModelProvider.notifier);
     _setupCommandListeners(viewModel, context);
     final isCheckLoading = useState(false);
     useMessageNotifier(context, viewModel);
@@ -49,18 +48,15 @@ class UncheckedChallengesBottomSheet extends HookConsumerWidget {
           ),
         ),
         Button.text(
-          onPressed: !viewModel.checkChallengesCommand.isExecuting.value &&
-                  !isCheckLoading.value
+          onPressed: !viewModel.checkChallengesCommand.isExecuting.value && !isCheckLoading.value
               ? () async => closeClicked(ref, context, viewModel)
               : null,
           isLoading: viewModel.closeCommand.isExecuting.value,
           child: Text(context.l10n.close),
         ),
         Button.primary(
-          onPressed: !viewModel.closeCommand.isExecuting.value &&
-                  !isCheckLoading.value
-              ? () =>
-                  viewModel.checkChallengesCommand.execute(uncheckedChallenges)
+          onPressed: !viewModel.closeCommand.isExecuting.value && !isCheckLoading.value
+              ? () => viewModel.checkChallengesCommand.execute(uncheckedChallenges)
               : null,
           isLoading: viewModel.checkChallengesCommand.isExecuting.value,
           child: Text(context.l10n.checkAll),
@@ -74,7 +70,7 @@ class UncheckedChallengesBottomSheet extends HookConsumerWidget {
     BuildContext context,
     UncheckedChallengesBottomSheetViewModel viewModel,
   ) async {
-    final challenges = await ref.read(dashboardViewModelProvider.future);
+    final challenges = await ref.read(currentChallengesViewModelProvider.future);
     final stillUncheckedChallenges = _getUncheckedYesterdayChallenges(
       challenges,
     );
@@ -184,10 +180,7 @@ class UncheckedChallengesBottomSheet extends HookConsumerWidget {
       if (!wasActive) return false;
 
       final yesterdayDay = challenge.days.firstWhere(
-        (day) =>
-            day.date.year == yesterday.year &&
-            day.date.month == yesterday.month &&
-            day.date.day == yesterday.day,
+        (day) => day.date.year == yesterday.year && day.date.month == yesterday.month && day.date.day == yesterday.day,
         orElse: () => DayModel(date: yesterday, status: DayStatus.none),
       );
 

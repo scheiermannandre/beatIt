@@ -18,6 +18,10 @@ void main() async {
     ..registerAdapter(DayDtoAdapter())
     ..registerAdapter(DayStatusDtoAdapter());
 
+  // final box = await Hive.openBox('challenges');
+  // await box.deleteFromDisk();
+  // await box.close();
+
   runApp(const ProviderScope(child: MainApp()));
 }
 

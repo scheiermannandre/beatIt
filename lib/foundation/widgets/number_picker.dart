@@ -189,14 +189,8 @@ class _NumberPickerState extends State<NumberPicker> {
                   child: Text(
                     value.toString(),
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: isSelected
-                              ? color
-                              : Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withCustomOpacity(.5),
-                          fontWeight:
-                              isSelected ? FontWeight.bold : FontWeight.normal,
+                          color: isSelected ? color : Theme.of(context).colorScheme.onSurface.withCustomOpacity(.5),
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                         ),
                   ),
                 );

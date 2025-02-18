@@ -8,4 +8,8 @@ extension DateTimeExtension on DateTime {
   bool isWithinPeriod(DateTime start, DateTime end) {
     return !isBefore(start) && !isAfter(end);
   }
+
+  bool isBeforeOrAt(DateTime other) {
+    return isBefore(other) || isSameDay(other);
+  }
 }

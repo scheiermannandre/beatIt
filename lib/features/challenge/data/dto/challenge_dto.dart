@@ -95,8 +95,7 @@ class DayDto extends HiveObject {
   factory DayDto.fromModel(DayModel model) {
     return DayDto(
       date: model.date,
-      status:
-          DayStatusDto.values.firstWhere((e) => e.name == model.status.name),
+      status: DayStatusDto.values.firstWhere((e) => e.name == model.status.name),
     );
   }
 

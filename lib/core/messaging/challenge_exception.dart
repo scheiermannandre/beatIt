@@ -78,22 +78,15 @@ final class ChallengeException extends AppException {
 
   @override
   String message(BuildContext context) => switch (_type) {
-        ChallengeExceptionType.failedToCreate =>
-          context.l10n.errorFailedToCreate,
+        ChallengeExceptionType.failedToCreate => context.l10n.errorFailedToCreate,
         ChallengeExceptionType.failedToCheck => context.l10n.errorFailedToCheck,
-        ChallengeExceptionType.failedToArchive =>
-          context.l10n.errorFailedToArchive,
+        ChallengeExceptionType.failedToArchive => context.l10n.errorFailedToArchive,
         ChallengeExceptionType.failedToGet => context.l10n.errorFailedToGet,
-        ChallengeExceptionType.failedToUpdate =>
-          context.l10n.errorFailedToUpdate,
+        ChallengeExceptionType.failedToUpdate => context.l10n.errorFailedToUpdate,
         ChallengeExceptionType.failedToBreak => context.l10n.errorFailedToBreak,
-        ChallengeExceptionType.dateOutsideChallengePeriod =>
-          context.l10n.errorDateOutsideChallengePeriod,
-        ChallengeExceptionType.invalidDuration =>
-          context.l10n.errorInvalidDuration,
-        ChallengeExceptionType.failedToCheckMany =>
-          context.l10n.errorFailedToCheckMany(_messageParameters[0]),
-        ChallengeExceptionType.failedToBreakOneOrMany =>
-          context.l10n.errorFailedToBreakMany(_messageParameters[0]),
+        ChallengeExceptionType.dateOutsideChallengePeriod => context.l10n.errorDateOutsideChallengePeriod,
+        ChallengeExceptionType.invalidDuration => context.l10n.errorInvalidDuration,
+        ChallengeExceptionType.failedToCheckMany => context.l10n.errorFailedToCheckMany(_messageParameters[0]),
+        ChallengeExceptionType.failedToBreakOneOrMany => context.l10n.errorFailedToBreakMany(_messageParameters[0]),
       };
 }

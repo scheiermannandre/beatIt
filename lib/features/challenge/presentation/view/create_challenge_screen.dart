@@ -53,8 +53,7 @@ class CreateChallengeScreen extends HookConsumerWidget {
               focusNode: AlwaysDisabledFocusNode(),
               suffixIcon: const Icon(Icons.keyboard_arrow_right_rounded),
               context: context,
-              onTap: () =>
-                  pickDuration(context, ref, durationController, duration),
+              onTap: () => pickDuration(context, ref, durationController, duration),
             ),
             _StyledTextField(
               controller: startDateController,
@@ -63,8 +62,7 @@ class CreateChallengeScreen extends HookConsumerWidget {
               focusNode: AlwaysDisabledFocusNode(),
               suffixIcon: const Icon(Icons.keyboard_arrow_right_rounded),
               context: context,
-              onTap: () =>
-                  pickStartDate(context, ref, startDateController, startDate),
+              onTap: () => pickStartDate(context, ref, startDateController, startDate),
             ),
           ],
         ),
@@ -79,10 +77,7 @@ class CreateChallengeScreen extends HookConsumerWidget {
               contentPadding: _contentPadding,
             ),
             FilledButton(
-              onPressed: () => ref
-                  .read(createChallengeViewModelProvider.notifier)
-                  .createChallengeCommand
-                  .execute(
+              onPressed: () => ref.read(createChallengeViewModelProvider.notifier).createChallengeCommand.execute(
                 (
                   name: titleController.text,
                   duration: duration.value,
@@ -90,9 +85,7 @@ class CreateChallengeScreen extends HookConsumerWidget {
                   startDate: startDate.value,
                 ),
               ),
-              child: createState.isLoading
-                  ? const CircularProgressIndicator()
-                  : Text(context.l10n.uiCreateChallenge),
+              child: createState.isLoading ? const CircularProgressIndicator() : Text(context.l10n.uiCreateChallenge),
             ),
           ],
         ),
@@ -145,8 +138,7 @@ class CreateChallengeScreen extends HookConsumerWidget {
               navigatorContext,
               CustomValue<ChallengeDuration, int>(
                 value: selectedDays,
-                labelExtractor: (value) =>
-                    context.l10n.customDurationDays(value),
+                labelExtractor: (value) => context.l10n.customDurationDays(value),
               ),
             );
           }
@@ -200,10 +192,7 @@ class _StyledTextField extends TextField {
   }) : super(
           decoration: InputDecoration(
             label: Text(label),
-            floatingLabelStyle: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontSize: _fontSize),
+            floatingLabelStyle: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: _fontSize),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(_borderRadius),
             ),

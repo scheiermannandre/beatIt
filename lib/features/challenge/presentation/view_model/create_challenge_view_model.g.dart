@@ -6,18 +6,14 @@ part of 'create_challenge_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$createChallengeViewModelHash() =>
-    r'fb6fca7af6cfd0b1f8519fe990d42acd1422d314';
+String _$createChallengeViewModelHash() => r'bd834b70f972ef54202ca712f9cf00c22dc9bdc8';
 
 /// See also [CreateChallengeViewModel].
 @ProviderFor(CreateChallengeViewModel)
-final createChallengeViewModelProvider =
-    AutoDisposeAsyncNotifierProvider<CreateChallengeViewModel, void>.internal(
+final createChallengeViewModelProvider = AutoDisposeAsyncNotifierProvider<CreateChallengeViewModel, void>.internal(
   CreateChallengeViewModel.new,
   name: r'createChallengeViewModelProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$createChallengeViewModelHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$createChallengeViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

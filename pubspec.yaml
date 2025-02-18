@@ -26,7 +26,6 @@ dependencies:
   riverpod_generator: ^2.6.3
   uuid: ^4.3.3
   very_good_analysis: ^7.0.0
-  watch_it: ^1.6.2
 
 dev_dependencies: 
   custom_lint: ^0.7.0  

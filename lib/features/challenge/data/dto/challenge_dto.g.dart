@@ -65,9 +65,7 @@ class ChallengeDtoAdapter extends TypeAdapter<ChallengeDto> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ChallengeDtoAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+      other is ChallengeDtoAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }
 
 class DayDtoAdapter extends TypeAdapter<DayDto> {
@@ -101,10 +99,7 @@ class DayDtoAdapter extends TypeAdapter<DayDto> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DayDtoAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+      identical(this, other) || other is DayDtoAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }
 
 class DayStatusDtoAdapter extends TypeAdapter<DayStatusDto> {
@@ -127,11 +122,14 @@ class DayStatusDtoAdapter extends TypeAdapter<DayStatusDto> {
 
   @override
   void write(BinaryWriter writer, DayStatusDto obj) {
-    final _ = switch (obj) {
-      DayStatusDto.completed => writer.writeByte(0),
-      DayStatusDto.skipped => writer.writeByte(1),
-      DayStatusDto.none => writer.writeByte(2)
-    };
+    switch (obj) {
+      case DayStatusDto.completed:
+        writer.writeByte(0);
+      case DayStatusDto.skipped:
+        writer.writeByte(1);
+      case DayStatusDto.none:
+        writer.writeByte(2);
+    }
   }
 
   @override
@@ -140,7 +138,5 @@ class DayStatusDtoAdapter extends TypeAdapter<DayStatusDto> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DayStatusDtoAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+      other is DayStatusDtoAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
 }

@@ -55,8 +55,7 @@ Future<T?> showAdaptiveBottomSheet<T>({
                   physics: physics,
                   child: Material(
                     color: Theme.of(context).bottomSheetTheme.backgroundColor,
-                    borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(24)),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                     child: SafeArea(
                       top: false,
                       child: Padding(
@@ -93,8 +92,7 @@ Future<T?> showAdaptiveBottomSheet<T>({
                                   bottom: 8,
                                 ),
                                 child: DefaultTextStyle(
-                                  style:
-                                      Theme.of(context).textTheme.titleLarge!,
+                                  style: Theme.of(context).textTheme.titleLarge!,
                                   textAlign: TextAlign.center,
                                   child: title,
                                 ),

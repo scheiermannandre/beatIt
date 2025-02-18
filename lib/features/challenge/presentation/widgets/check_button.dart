@@ -20,10 +20,8 @@ class CheckButton extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final challengeModelAsyncValue =
-        ref.watch(challengeViewModelProvider(challengeId));
-    final challengeViewModel =
-        ref.watch(challengeViewModelProvider(challengeId).notifier);
+    final challengeModelAsyncValue = ref.watch(challengeViewModelProvider(challengeId));
+    final challengeViewModel = ref.watch(challengeViewModelProvider(challengeId).notifier);
     useMessageNotifier(context, challengeViewModel);
     final challengeModel = challengeModelAsyncValue.valueOrNull;
     final theme = Theme.of(context);
@@ -35,8 +33,7 @@ class CheckButton extends HookConsumerWidget {
     useEffect(
       () {
         var mounted = true;
-        final subscription = challengeViewModel.checkChallengeCommand.results
-            .listen((result, _) async {
+        final subscription = challengeViewModel.checkChallengeCommand.results.listen((result, _) async {
           if (!mounted) return;
 
           // Only update if still mounted
@@ -75,9 +72,7 @@ class CheckButton extends HookConsumerWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: isDayCompleted
-              ? theme.colorScheme.primary
-              : theme.colorScheme.primary.withCustomOpacity(.5),
+          color: isDayCompleted ? theme.colorScheme.primary : theme.colorScheme.primary.withCustomOpacity(.5),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Button.icon(

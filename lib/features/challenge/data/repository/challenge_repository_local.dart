@@ -21,11 +21,57 @@ class ChallengeRepositoryLocal extends ChallengeRepository {
       return Failure(result.exceptionOrNull()!);
     }
 
-    final challenges = result.getOrThrow()
-      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    final challenges = result.getOrThrow()..sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     updateCacheInBatch(challenges);
     return Success(challenges);
+  }
+
+  /// Fetches all current challenges, sorts them by creation date,
+  /// and updates the cache.
+  @override
+  AsyncResult<List<ChallengeModel>> getCurrentChallenges() async {
+    final result = await getChallenges();
+    if (result.isError()) return result;
+
+    final challenges = result.getOrThrow();
+    final currentChallenges = challenges
+        .where(
+          (c) => c.startDate.withoutTime.isBeforeOrAt(DateTime.now().withoutTime) && !(c.isArchived ?? false),
+        )
+        .toList();
+
+    return Success(currentChallenges);
+  }
+
+  /// Fetches all future challenges, sorts them by creation date,
+  /// and updates the cache.
+  @override
+  AsyncResult<List<ChallengeModel>> getFutureChallenges() async {
+    final result = await getChallenges();
+    if (result.isError()) return result;
+
+    final challenges = result.getOrThrow();
+    final futureChallenges = challenges
+        .where(
+          (c) => c.startDate.withoutTime.isAfter(DateTime.now().withoutTime) && !(c.isArchived ?? false),
+        )
+        .toList();
+
+    return Success(futureChallenges);
+  }
+
+  /// Fetches all archived challenges, sorts them by creation date,
+  /// and updates the cache.
+  @override
+  AsyncResult<List<ChallengeModel>> getArchivedChallenges() async {
+    final result = await getChallenges();
+    if (result.isError()) return result;
+
+    final challenges = result.getOrThrow();
+    final archivedChallenges = challenges.where((c) => c.isArchived ?? false).toList();
+
+    return Success(archivedChallenges);
   }
 
   /// Checks or unchecks a challenge for a specific date.
@@ -86,17 +132,17 @@ class ChallengeRepositoryLocal extends ChallengeRepository {
   }
 
   /// Archives a challenge and removes it from active cache.
-  @override
-  AsyncResult<Unit> archiveChallenge({
-    required String challengeId,
-  }) async {
-    final result = await _service.archiveChallenge(challengeId);
-    if (result.isSuccess()) {
-      deleteFromCache(challengeId);
-      return const Success(unit);
-    }
-    return Failure(result.exceptionOrNull()!);
-  }
+  // @override
+  // AsyncResult<Unit> archiveChallenge({
+  //   required String challengeId,
+  // }) async {
+  //   final result = await _service.archiveChallenge(challengeId);
+  //   if (result.isSuccess()) {
+  //     deleteFromCache(challengeId);
+  //     return const Success(unit);
+  //   }
+  //   return Failure(result.exceptionOrNull()!);
+  // }
 
   /// Checks if yesterday's challenge was missed and handles accordingly:
   /// - If start over enabled: Resets challenge
@@ -116,12 +162,11 @@ class ChallengeRepositoryLocal extends ChallengeRepository {
       return const Success(unit);
     }
 
-    final updatedChallenge = challenge.startOverEnabled
-        ? _handleStartOver(challenge)
-        : _handleExtendChallenge(challenge);
+    final updatedChallenge =
+        challenge.startOverEnabled ? _handleStartOver(challenge) : _handleExtendChallenge(challenge);
 
     if (updatedChallenge.areGraceDaysSpent) {
-      return _archiveChallenge(challengeId);
+      return archiveChallenge(challengeId: challengeId);
     }
 
     return _updateAndCache(updatedChallenge, challengeId);
@@ -170,8 +215,7 @@ class ChallengeRepositoryLocal extends ChallengeRepository {
     final yesterday = DateTime.now().subtract(const Duration(days: 1));
     return challenge.copyWith(
       days: [
-        ...challenge.days
-          ..removeWhere((day) => day.date.withoutTime == yesterday.withoutTime),
+        ...challenge.days..removeWhere((day) => day.date.withoutTime == yesterday.withoutTime),
         DayModel(
           date: yesterday,
           status: DayStatus.skipped,
@@ -184,19 +228,23 @@ class ChallengeRepositoryLocal extends ChallengeRepository {
 
   /// Deletes a challenge and removes it from cache.
   /// Returns Success(unit) if successful, Failure otherwise.
-  AsyncResult<Unit> _archiveChallenge(String challengeId) async {
-    final result = await _service.archiveChallenge(challengeId);
-    if (result.isSuccess()) {
-      deleteFromCache(challengeId);
-      return const Success(unit);
+  @override
+  AsyncResult<Unit> archiveChallenge({
+    required String challengeId,
+  }) async {
+    final challengeResult = await getChallengeById(challengeId);
+    if (challengeResult.isError()) {
+      return Failure(challengeResult.exceptionOrNull()!);
     }
-    return Failure(result.exceptionOrNull()!);
+
+    final challenge = challengeResult.getOrThrow();
+    final updatedChallenge = challenge.copyWith(isArchived: true);
+    return _updateAndCache(updatedChallenge, challengeId);
   }
 
   /// Checks if a given date falls within the challenge period.
   bool _isDateWithinChallengePeriod(DateTime date, ChallengeModel challenge) {
-    final endDate =
-        challenge.startDate.add(Duration(days: challenge.targetDays));
+    final endDate = challenge.startDate.add(Duration(days: challenge.targetDays));
     return date.isWithinPeriod(challenge.startDate, endDate);
   }
 
@@ -215,9 +263,7 @@ class ChallengeRepositoryLocal extends ChallengeRepository {
   }
 
   DayStatus _toggleDayStatus(DayStatus current) {
-    return current == DayStatus.completed
-        ? DayStatus.none
-        : DayStatus.completed;
+    return current == DayStatus.completed ? DayStatus.none : DayStatus.completed;
   }
 }
 

@@ -9,8 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'challenge_view_model.g.dart';
 
 @riverpod
-class ChallengeViewModel extends _$ChallengeViewModel
-    with MessageNotifierMixin {
+class ChallengeViewModel extends _$ChallengeViewModel with MessageNotifierMixin {
   late final ChallengeRepository _repository;
   late final StreamSubscription<ChallengeModel?> _subscription;
   late final Command<void, Result<Unit>> archiveChallengeCommand;
@@ -29,9 +28,7 @@ class ChallengeViewModel extends _$ChallengeViewModel
       initialValue: const Success(unit),
     );
 
-    _subscription = _repository
-        .observeChallengeById(challengeId)
-        .listen((challenge) => state = AsyncData(challenge));
+    _subscription = _repository.observeChallengeById(challengeId).listen((challenge) => state = AsyncData(challenge));
 
     ref.onDispose(() {
       _subscription.cancel();

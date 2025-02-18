@@ -1,62 +1,57 @@
 import 'package:beat_it/core/core.dart';
 import 'package:beat_it/features/challenge/challenge.dart';
+import 'package:beat_it/features/challenge/presentation/view/tabs/archived_challenges_tab.dart';
+import 'package:beat_it/features/challenge/presentation/view/tabs/current_challenges_tab.dart';
+import 'package:beat_it/features/challenge/presentation/view/tabs/future_challenges_tab.dart';
+import 'package:beat_it/features/challenge/presentation/view_model/dashboard_view_model.dart';
 import 'package:beat_it/foundation/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+const _listPadding = EdgeInsets.only(top: 8, bottom: 24, left: 8, right: 8);
+const _itemSpacing = 8.0;
+const _animationConfig = (
+  fadeInDuration: Duration(milliseconds: 500),
+  slideBegin: Offset(0.5, 0),
+  shimmerDuration: Duration(milliseconds: 750),
+);
 
 class DashboardScreen extends StatefulHookConsumerWidget {
   const DashboardScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _DashboardScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _DashboardScreenState();
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen>
-    with WidgetsBindingObserver {
-  static const _animationConfig = (
-    fadeInDuration: Duration(milliseconds: 500),
-    slideBegin: Offset(0.5, 0),
-    shimmerDuration: Duration(milliseconds: 750),
-  );
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
+  late final TabController _tabController;
 
-  static const _listPadding =
-      EdgeInsets.only(top: 8, bottom: 24, left: 8, right: 8);
-  static const _itemSpacing = 8.0;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _tabController = TabController(length: 3, vsync: this, initialIndex: 1);
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _tabController.dispose();
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      ref
-          .read(uncheckedChallengesAnalyzerProvider.notifier)
-          .shouldCheckChallenges();
+      ref.read(uncheckedChallengesAnalyzerProvider.notifier).shouldCheckChallenges();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final scrollController = useScrollController();
     final challengesAsyncValue = ref.watch(dashboardViewModelProvider);
-
-    _setupUncheckedChallengesListener(
-      ref: ref,
-      context: context,
-      challengesAsyncValue: challengesAsyncValue,
-    );
-    _setupNewItemsListener(ref: ref, scrollController: scrollController);
 
     return Scaffold(
       appBar: AppBar(
@@ -67,6 +62,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
             icon: const Icon(Icons.add),
           ),
         ],
+        bottom: challengesAsyncValue.when(
+          data: (challenges) => challenges.isNotEmpty
+              ? TabBar(
+                  dividerColor: Colors.transparent,
+                  controller: _tabController,
+                  tabs: [
+                    Tab(text: context.l10n.tabArchived),
+                    Tab(text: context.l10n.tabCurrent),
+                    Tab(text: context.l10n.tabFuture),
+                  ],
+                )
+              : null,
+          loading: () => null,
+          error: (error, stackTrace) => null,
+        ),
       ),
       body: challengesAsyncValue.when(
         data: (challenges) => challenges.when(
@@ -76,37 +86,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
             );
           },
           notEmpty: (challenges) {
-            return ListView(
-              controller: scrollController,
-              physics: const ClampingScrollPhysics(),
-              padding: _listPadding,
-              children: AnimateList(
-                effects: [
-                  FadeEffect(duration: _animationConfig.fadeInDuration),
-                  SlideEffect(
-                    begin: _animationConfig.slideBegin,
-                    curve: Curves.easeOutQuad,
-                    duration: _animationConfig.fadeInDuration,
-                  ),
-                  const ThenEffect(),
-                  ShimmerEffect(
-                    duration: _animationConfig.shimmerDuration,
-                  ),
-                ],
-                children: challenges
-                    .map(
-                      (challenge) => Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: _itemSpacing / 2,
-                        ),
-                        child: ChallengeWidget(
-                          key: ValueKey(challenge.id),
-                          challengeId: challenge.id,
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
+            return TabBarView(
+              controller: _tabController,
+              children: const [
+                ArchivedChallengesTab(),
+                CurrentChallengesTab(),
+                FutureChallengesTab(),
+              ],
             );
           },
         ),
@@ -115,45 +101,60 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
       ),
     );
   }
+}
 
-  void _setupNewItemsListener({
-    required WidgetRef ref,
-    required ScrollController scrollController,
-  }) {
-    ref.listen(dashboardViewModelProvider, (previousAsyncValue, newAsyncValue) {
-      final previousValue = previousAsyncValue?.valueOrNull;
-      final newValue = newAsyncValue.valueOrNull;
+class ChallengesList extends StatelessWidget {
+  const ChallengesList({
+    required this.challenges,
+    required this.scrollController,
+    super.key,
+  });
 
-      if (previousValue == null || newValue == null) return;
-      if (previousValue.length >= newValue.length) return;
+  final List<ChallengeModel> challenges;
+  final ScrollController scrollController;
 
-      if (!scrollController.hasClients) return;
-      Future.delayed(const Duration(milliseconds: 50), () {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          scrollController
-              .jumpTo(scrollController.position.maxScrollExtent + 100);
-        });
-      });
-    });
-  }
+  @override
+  Widget build(BuildContext context) {
+    if (challenges.isEmpty) {
+      return Center(
+        child: Text(
+          'No challenges',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+      );
+    }
 
-  void _setupUncheckedChallengesListener({
-    required WidgetRef ref,
-    required BuildContext context,
-    required AsyncValue<List<ChallengeModel>> challengesAsyncValue,
-  }) {
-    ref.listen(
-      uncheckedChallengesAnalyzerProvider,
-      (_, shouldCheck) {
-        if (!shouldCheck || !challengesAsyncValue.hasValue) return;
-
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          UncheckedChallengesBottomSheet.showIfNeeded(
-            context: context,
-            challenges: challengesAsyncValue.value!,
-          );
-        });
-      },
+    return ListView(
+      controller: scrollController,
+      physics: const ClampingScrollPhysics(),
+      padding: _listPadding,
+      children: AnimateList(
+        effects: [
+          FadeEffect(duration: _animationConfig.fadeInDuration),
+          SlideEffect(
+            begin: _animationConfig.slideBegin,
+            curve: Curves.easeOutQuad,
+            duration: _animationConfig.fadeInDuration,
+          ),
+          const ThenEffect(),
+          ShimmerEffect(
+            duration: _animationConfig.shimmerDuration,
+          ),
+        ],
+        children: challenges
+            .map(
+              (challenge) => Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: _itemSpacing / 2,
+                ),
+                child: ChallengeWidget(
+                  key: ValueKey(challenge.id),
+                  challengeId: challenge.id,
+                ),
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 }
