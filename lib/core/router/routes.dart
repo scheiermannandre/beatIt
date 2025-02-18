@@ -21,9 +21,10 @@ class AppRoute {
 }
 
 extension GoRouterContextX on BuildContext {
-  void pushChallenge({required String id}) => pushNamed(
+  void pushChallenge({required String id, required bool isArchived}) => pushNamed(
         AppRoute.challenge.name,
         pathParameters: {'id': id},
+        queryParameters: {'isArchived': isArchived.toString()},
       );
 
   void pushCreateChallenge() => pushNamed(AppRoute.createChallenge.name);

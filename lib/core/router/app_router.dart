@@ -19,7 +19,8 @@ final appRouter = GoRouter(
           name: AppRoute.challenge.name,
           builder: (context, state) {
             final id = state.pathParameters['id']!;
-            return ChallengeDetailsScreen(challengeId: id);
+            final isArchived = state.uri.queryParameters['isArchived'] == 'true';
+            return ChallengeDetailsScreen(challengeId: id, isArchived: isArchived);
           },
         ),
       ],

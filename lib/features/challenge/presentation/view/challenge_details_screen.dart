@@ -19,12 +19,14 @@ const _fadeSlideEffects = <Effect<void>>[
 class ChallengeDetailsScreen extends HookConsumerWidget {
   const ChallengeDetailsScreen({
     required this.challengeId,
+    required this.isArchived,
     super.key,
   });
 
   static const _indicatorPadding = EdgeInsets.only(top: 8);
 
   final String challengeId;
+  final bool isArchived;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final challengeAsyncValue = ref.watch(challengeViewModelProvider(challengeId));
@@ -38,81 +40,87 @@ class ChallengeDetailsScreen extends HookConsumerWidget {
 
       return Scaffold(
         appBar: AppBar(),
-        body: ContentWithBottomSection(
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListTile(
-                title: Text(
-                  context.l10n.challengeCommitmentText(
-                    challenge.title,
-                    challenge.targetDays,
-                    DateFormat.yMMMd().format(challenge.startDate.toLocal()),
-                  ),
-                ),
-                subtitle: Padding(
-                  padding: _indicatorPadding,
-                  child: AnimatedProgressIndicator(
-                    progress: progress,
-                    challengeId: challengeId,
-                  ),
-                ),
-              ),
-              SwitchListTile(
-                value: challenge.startOverEnabled,
-                onChanged: (value) => challengeViewModel.enableStartOver(
-                  challengeId: challengeId,
-                  enable: value,
-                ),
-                title: Text(context.l10n.startOverWhenBreaking),
-              ),
-              ListTile(
-                title: Text(context.l10n.currentStreakTitle),
-                subtitle: Text(context.l10n.streak(challenge.currentStreak)),
-              ),
-              ListTile(
-                title: Text(context.l10n.bestStreakTitle),
-                subtitle: Text(context.l10n.streak(challenge.bestStreak)),
-              ),
-              Animate(
-                effects: _fadeSlideEffects,
-                target: !challenge.startOverEnabled ? 1 : 0,
-                autoPlay: false,
-                child: ListTile(
-                  key: const ValueKey('grace_days'),
-                  title: Text(context.l10n.graceDaysSpent),
-                  trailing: Text(
-                    context.l10n.graceDaysCount(
-                      challenge.graceDaysSpent,
-                      ChallengeModel.maxGraceDayCount,
+        body: IgnorePointer(
+          ignoring: isArchived,
+          child: ContentWithBottomSection(
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ListTile(
+                  title: Text(
+                    context.l10n.challengeCommitmentText(
+                      challenge.title,
+                      challenge.targetDays,
+                      DateFormat.yMMMd().format(challenge.startDate.toLocal()),
                     ),
-                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  subtitle: Padding(
+                    padding: _indicatorPadding,
+                    child: AnimatedProgressIndicator(
+                      progress: progress,
+                      challengeId: challengeId,
+                    ),
                   ),
                 ),
-              ),
-              Animate(
-                effects: _fadeSlideEffects,
-                target: challenge.startOverEnabled ? 1 : 0,
-                autoPlay: false,
-                child: ListTile(
-                  key: const ValueKey('current_attempt'),
-                  title: Text(context.l10n.currentAttempt),
-                  trailing: Text(
-                    '${challenge.numberOfAttempts}',
-                    style: Theme.of(context).textTheme.titleMedium,
+                SwitchListTile(
+                  value: challenge.startOverEnabled,
+                  onChanged: (value) => challengeViewModel.enableStartOver(
+                    challengeId: challengeId,
+                    enable: value,
+                  ),
+                  title: Text(context.l10n.startOverWhenBreaking),
+                ),
+                ListTile(
+                  title: Text(context.l10n.currentStreakTitle),
+                  subtitle: Text(context.l10n.streak(challenge.currentStreak)),
+                ),
+                ListTile(
+                  title: Text(context.l10n.bestStreakTitle),
+                  subtitle: Text(context.l10n.streak(challenge.bestStreak)),
+                ),
+                Animate(
+                  effects: _fadeSlideEffects,
+                  target: !challenge.startOverEnabled ? 1 : 0,
+                  autoPlay: false,
+                  child: ListTile(
+                    key: const ValueKey('grace_days'),
+                    title: Text(context.l10n.graceDaysSpent),
+                    trailing: Text(
+                      context.l10n.graceDaysCount(
+                        challenge.graceDaysSpent,
+                        ChallengeModel.maxGraceDayCount,
+                      ),
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          bottomSection: Column(
-            children: [
-              FilledButton.icon(
-                onPressed: () => challengeViewModel.archiveChallengeCommand.execute(),
-                icon: const Icon(Icons.delete_outline_rounded),
-                label: Text(context.l10n.archiveChallenge),
-              ),
-            ],
+                Animate(
+                  effects: _fadeSlideEffects,
+                  target: challenge.startOverEnabled ? 1 : 0,
+                  autoPlay: false,
+                  child: ListTile(
+                    key: const ValueKey('current_attempt'),
+                    title: Text(context.l10n.currentAttempt),
+                    trailing: Text(
+                      '${challenge.numberOfAttempts}',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            bottomSection: Column(
+              children: [
+                Visibility(
+                  visible: !isArchived,
+                  child: FilledButton.icon(
+                    onPressed: () => challengeViewModel.archiveChallengeCommand.execute(),
+                    icon: const Icon(Icons.delete_outline_rounded),
+                    label: Text(context.l10n.archiveChallenge),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );

@@ -205,7 +205,7 @@ extension ChallengeModelX on ChallengeModel {
     return currentStreak;
   }
 
-  bool get areGraceDaysSpent => graceDaysSpent > ChallengeModel.maxGraceDayCount;
+  bool get areGraceDaysSpent => graceDaysSpent >= ChallengeModel.maxGraceDayCount;
 
   bool get isYesterdayCompleted => _days.any(
         (day) =>

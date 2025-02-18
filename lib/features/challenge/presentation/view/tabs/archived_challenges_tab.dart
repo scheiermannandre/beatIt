@@ -19,6 +19,7 @@ class ArchivedChallengesTab extends HookConsumerWidget {
         empty: () => NoChallengesInTab(title: context.l10n.uiNoArchivedChallenges),
         notEmpty: (challenges) {
           return ChallengesList(
+            isArchived: true,
             challenges: challenges.toList(),
             scrollController: scrollController,
           );

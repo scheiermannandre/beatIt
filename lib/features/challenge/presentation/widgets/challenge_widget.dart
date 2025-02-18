@@ -12,11 +12,12 @@ import 'package:intl/intl.dart';
 class ChallengeWidget extends ConsumerStatefulWidget {
   const ChallengeWidget({
     required this.challengeId,
+    this.isArchived = false,
     super.key,
   });
 
   final String challengeId;
-
+  final bool isArchived;
   @override
   ConsumerState<ChallengeWidget> createState() => _ChallengeWidgetState();
 }
@@ -27,6 +28,21 @@ class _ChallengeWidgetState extends ConsumerState<ChallengeWidget> with Automati
 
   String _formatDate(DateTime date, BuildContext context) {
     return DateFormat.yMMMd(Localizations.localeOf(context).languageCode).format(date);
+  }
+
+  String _getStatusEmoji(ChallengeModel challengeModel) {
+    // Check if challenge is completed successfully
+    final completedDays = challengeModel.days.where((day) => day.isCompleted).length;
+    if (completedDays == challengeModel.targetDays) {
+      return ' 🎉 '; // Success
+    } else
+
+    // Check if challenge was broken (grace days spent)
+    if (challengeModel.areGraceDaysSpent) {
+      return ' ❌ '; // Failed
+    } else {
+      return ' 🗑️ '; // Archived/Deleted
+    }
   }
 
   @override
@@ -41,7 +57,7 @@ class _ChallengeWidgetState extends ConsumerState<ChallengeWidget> with Automati
           margin: EdgeInsets.zero,
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
-            onTap: () => context.pushChallenge(id: widget.challengeId),
+            onTap: () => context.pushChallenge(id: widget.challengeId, isArchived: widget.isArchived),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
               child: Column(
@@ -56,10 +72,26 @@ class _ChallengeWidgetState extends ConsumerState<ChallengeWidget> with Automati
                           challengeId: widget.challengeId,
                         ),
                       ),
-                      CheckButton(
-                        challengeId: widget.challengeId,
-                        date: DateTime.now(),
-                      ),
+                      if (!widget.isArchived)
+                        CheckButton(
+                          challengeId: widget.challengeId,
+                          date: DateTime.now(),
+                        )
+                      else
+                        Container(
+                          width: 40,
+                          height: 40,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            _getStatusEmoji(challenge),
+                            style: const TextStyle(fontSize: 16),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                     ],
                   ),
                   _BoxesGrid(challengeModel: challenge),

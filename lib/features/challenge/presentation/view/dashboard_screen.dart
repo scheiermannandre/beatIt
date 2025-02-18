@@ -135,11 +135,13 @@ class ChallengesList extends StatelessWidget {
   const ChallengesList({
     required this.challenges,
     required this.scrollController,
+    this.isArchived = false,
     super.key,
   });
 
   final List<ChallengeModel> challenges;
   final ScrollController scrollController;
+  final bool isArchived;
 
   @override
   Widget build(BuildContext context) {
@@ -178,6 +180,7 @@ class ChallengesList extends StatelessWidget {
                 child: ChallengeWidget(
                   key: ValueKey(challenge.id),
                   challengeId: challenge.id,
+                  isArchived: isArchived,
                 ),
               ),
             )
