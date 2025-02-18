@@ -110,7 +110,7 @@ class ChallengeRepositoryLocal extends ChallengeRepository {
       return const Failure(ChallengeException.failedToArchive());
     }
 
-    return Success(challengesToArchive);
+    return getChallenges();
   }
 
   /// Checks or unchecks a challenge for a specific date.
