@@ -1,6 +1,6 @@
-import 'package:beat_it/core/core.dart';
 import 'package:beat_it/features/challenge/challenge.dart';
 import 'package:beat_it/features/challenge/presentation/view_model/archived_challenges_view_model.dart';
+import 'package:beat_it/features/challenge/presentation/widgets/no_challenges_in_tab.dart';
 import 'package:beat_it/foundation/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -16,11 +16,7 @@ class ArchivedChallengesTab extends HookConsumerWidget {
 
     return challengesAsyncValue.when(
       data: (challenges) => challenges.when(
-        empty: () {
-          return NoChallenges(
-            onCreateChallenge: () => context.pushCreateChallenge(),
-          );
-        },
+        empty: () => NoChallengesInTab(title: context.l10n.uiNoArchivedChallenges),
         notEmpty: (challenges) {
           return ChallengesList(
             challenges: challenges.toList(),

@@ -13,7 +13,7 @@ class DashboardViewModel extends _$DashboardViewModel {
   FutureOr<List<ChallengeModel>> build() {
     final repository = ref.watch(challengeRepositoryProvider);
 
-    _subscription = repository.observeCurrentChallenges().listen(updateChallenges);
+    _subscription = repository.observeChallenges().listen(updateChallenges);
 
     ref.onDispose(() {
       _subscription.cancel();
