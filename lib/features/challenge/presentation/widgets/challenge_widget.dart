@@ -68,7 +68,7 @@ class _ChallengeWidgetState extends ConsumerState<ChallengeWidget> with Automati
                     '${_formatDate(challenge.startDate, context)} - '
                     '${_formatDate(
                       challenge.startDate.add(
-                        Duration(days: challenge.targetDays),
+                        Duration(days: challenge.targetDays - 1),
                       ),
                       context,
                     )}',

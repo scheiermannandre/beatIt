@@ -35,4 +35,9 @@ class DashboardViewModel extends _$DashboardViewModel {
       (error) => throw error,
     );
   }
+
+  Future<void> analyzeChallenges() async {
+    final repository = ref.read(challengeRepositoryProvider);
+    await repository.analyzeChallenges();
+  }
 }

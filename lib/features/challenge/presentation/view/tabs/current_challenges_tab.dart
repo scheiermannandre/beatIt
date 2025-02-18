@@ -13,12 +13,6 @@ class CurrentChallengesTab extends HookConsumerWidget {
     final scrollController = useScrollController();
     final challengesAsyncValue = ref.watch(currentChallengesViewModelProvider);
 
-    _setupUncheckedChallengesListener(
-      ref: ref,
-      context: context,
-      challengesAsyncValue: challengesAsyncValue,
-    );
-
     return challengesAsyncValue.when(
       data: (challenges) => challenges.when(
         empty: () => NoChallengesInTab(title: context.l10n.uiNoChallenges),
@@ -31,26 +25,6 @@ class CurrentChallengesTab extends HookConsumerWidget {
       ),
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stackTrace) => Center(child: Text('Error: $error')),
-    );
-  }
-
-  void _setupUncheckedChallengesListener({
-    required WidgetRef ref,
-    required BuildContext context,
-    required AsyncValue<List<ChallengeModel>> challengesAsyncValue,
-  }) {
-    ref.listen(
-      uncheckedChallengesAnalyzerProvider,
-      (_, shouldCheck) {
-        if (!shouldCheck || !challengesAsyncValue.hasValue) return;
-
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          UncheckedChallengesBottomSheet.showIfNeeded(
-            context: context,
-            challenges: challengesAsyncValue.value!,
-          );
-        });
-      },
     );
   }
 }

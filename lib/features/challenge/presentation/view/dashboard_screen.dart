@@ -45,6 +45,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      ref.read(dashboardViewModelProvider.notifier).analyzeChallenges();
       ref.read(uncheckedChallengesAnalyzerProvider.notifier).shouldCheckChallenges();
     }
   }
@@ -52,6 +53,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
   @override
   Widget build(BuildContext context) {
     final challengesAsyncValue = ref.watch(dashboardViewModelProvider);
+
+    _setupUncheckedChallengesListener(
+      ref: ref,
+      context: context,
+      challengesAsyncValue: challengesAsyncValue,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -99,6 +106,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stackTrace) => Center(child: Text('Error: $error')),
       ),
+    );
+  }
+
+  void _setupUncheckedChallengesListener({
+    required WidgetRef ref,
+    required BuildContext context,
+    required AsyncValue<List<ChallengeModel>> challengesAsyncValue,
+  }) {
+    ref.listen(
+      uncheckedChallengesAnalyzerProvider,
+      (_, shouldCheck) {
+        if (!shouldCheck || !challengesAsyncValue.hasValue) return;
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          UncheckedChallengesBottomSheet.showIfNeeded(
+            context: context,
+            challenges: challengesAsyncValue.value!.where((challenge) => !(challenge.isArchived ?? false)).toList(),
+          );
+        });
+      },
     );
   }
 }

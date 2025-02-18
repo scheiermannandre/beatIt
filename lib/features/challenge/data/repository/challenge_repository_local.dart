@@ -74,6 +74,43 @@ class ChallengeRepositoryLocal extends ChallengeRepository {
     return Success(archivedChallenges);
   }
 
+  @override
+  AsyncResult<List<ChallengeModel>> analyzeChallenges() async {
+    final result = await getChallenges();
+    if (result.isError()) return result;
+
+    final challenges = result.getOrThrow();
+    final now = DateTime.now();
+
+    final challengesToArchive = challenges.where((challenge) {
+      // Skip if already archived
+      if (challenge.isArchived ?? false) return false;
+
+      // Check if challenge end date is in the past
+      final endDate = challenge.startDate.add(Duration(days: challenge.targetDays - 1));
+      return endDate.withoutTime.isBefore(now.withoutTime);
+    }).toList();
+
+    if (challengesToArchive.isEmpty) {
+      return Success(challengesToArchive);
+    }
+
+    // Archive all past challenges
+    final results = await Future.wait(
+      challengesToArchive.map(
+        (challenge) => archiveChallenge(challengeId: challenge.id),
+      ),
+    );
+
+    // Check if any archive operations failed
+    final failures = results.where((r) => r.isError()).toList();
+    if (failures.isNotEmpty) {
+      return const Failure(ChallengeException.failedToArchive());
+    }
+
+    return Success(challengesToArchive);
+  }
+
   /// Checks or unchecks a challenge for a specific date.
   /// Returns failure if date is outside challenge period.
   @override

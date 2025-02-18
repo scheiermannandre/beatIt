@@ -71,6 +71,8 @@ abstract class ChallengeRepository {
     required DateTime date,
   });
 
+  AsyncResult<List<ChallengeModel>> analyzeChallenges();
+
   AsyncResult<Unit> enableStartOver({
     required String challengeId,
     required bool enable,
