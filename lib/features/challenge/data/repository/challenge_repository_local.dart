@@ -75,7 +75,7 @@ class ChallengeRepositoryLocal extends ChallengeRepository {
   }
 
   @override
-  AsyncResult<List<ChallengeModel>> analyzeChallenges() async {
+  AsyncResult<List<ChallengeModel>> checkNeedToArchiveChallenge() async {
     final result = await getChallenges();
     if (result.isError()) return result;
 
@@ -183,13 +183,12 @@ class ChallengeRepositoryLocal extends ChallengeRepository {
   //   return Failure(result.exceptionOrNull()!);
   // }
 
-  /// Checks if yesterday's challenge was missed and handles accordingly:
-  /// - If start over enabled: Resets challenge
-  /// - If disabled: Extends duration and marks as skipped
-  /// - If grace days spent: Deletes challenge
+  /// Checks if a challenge needs to be broken due to missed days.
+  /// Returns Success(unit) if successful, Failure otherwise.
   @override
   AsyncResult<Unit> breakChallengeIfNeeded({
     required String challengeId,
+    DateTime? date,
   }) async {
     final challengeResult = await getChallengeById(challengeId);
     if (challengeResult.isError()) {
@@ -197,18 +196,98 @@ class ChallengeRepositoryLocal extends ChallengeRepository {
     }
 
     final challenge = challengeResult.getOrThrow();
-    if (challenge.isYesterdayCompleted || challenge.isYesterdaySkipped) {
+    final dateToCheck = date ?? DateTime.now().subtract(const Duration(days: 1));
+
+    // Skip if date is outside challenge period
+    if (!_isDateWithinChallengePeriod(dateToCheck, challenge)) {
       return const Success(unit);
     }
 
-    final updatedChallenge =
-        challenge.startOverEnabled ? _handleStartOver(challenge) : _handleExtendChallenge(challenge);
+    // Skip if day is already marked
+    if (challenge.days.any(
+      (day) => day.date.withoutTime == dateToCheck.withoutTime,
+    )) {
+      return const Success(unit);
+    }
 
-    if (updatedChallenge.areGraceDaysSpent) {
+    // If start over is enabled, reset the challenge
+    if (challenge.startOverEnabled) {
+      final updatedChallenge = challenge.copyWith(
+        startDate: DateTime.now(),
+        days: [], // Clear all previous days
+        graceDaysSpent: 0, // Reset grace days
+        numberOfAttempts: challenge.numberOfAttempts + 1,
+      );
+      return _updateAndCache(updatedChallenge, challengeId);
+    }
+
+    // Otherwise use grace days system
+    final updatedChallenge = challenge.copyWith(
+      days: [
+        ...challenge.days,
+        DayModel(
+          date: dateToCheck,
+          status: DayStatus.skipped,
+        ),
+      ],
+      graceDaysSpent: challenge.graceDaysSpent + 1,
+      targetDays: challenge.targetDays + 1, // Add one day for each grace day used
+    );
+
+    // Only archive if grace days are spent AND start over is not enabled
+    if (updatedChallenge.areGraceDaysSpent && !challenge.startOverEnabled) {
       return archiveChallenge(challengeId: challengeId);
     }
 
     return _updateAndCache(updatedChallenge, challengeId);
+  }
+
+  /// Checks all active challenges for missed days up to yesterday and breaks them if needed
+  @override
+  AsyncResult<List<ChallengeModel>> checkNeedToBreakChallenges() async {
+    final result = await getChallenges();
+    if (result.isError()) return result;
+
+    final challenges = result.getOrThrow();
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+
+    final activeChallenges = challenges.where((challenge) {
+      // Skip archived challenges
+      if (challenge.isArchived ?? false) return false;
+
+      // Only check challenges that have started and haven't ended
+      final endDate = challenge.startDate.add(Duration(days: challenge.targetDays));
+      return challenge.startDate.withoutTime.isBeforeOrAt(yesterday.withoutTime) &&
+          endDate.withoutTime.isAfterOrAt(yesterday.withoutTime);
+    }).toList();
+
+    if (activeChallenges.isEmpty) {
+      return Success(activeChallenges);
+    }
+
+    // Check each challenge for missed days
+    for (final challenge in activeChallenges) {
+      var currentDate = challenge.startDate;
+
+      while (currentDate.withoutTime.isBefore(yesterday.withoutTime)) {
+        // Skip if day is already marked
+        if (!challenge.days.any(
+          (day) => day.date.withoutTime == currentDate.withoutTime,
+        )) {
+          // Day was missed, mark it and check if challenge should be broken
+          final result = await breakChallengeIfNeeded(
+            challengeId: challenge.id,
+            date: currentDate, // Pass the specific date to check
+          );
+          if (result.isError()) {
+            return Failure(result.exceptionOrNull()!);
+          }
+        }
+        currentDate = currentDate.add(const Duration(days: 1));
+      }
+    }
+
+    return getChallenges();
   }
 
   /// Updates a challenge day's status, toggling between completed and none.
@@ -236,32 +315,6 @@ class ChallengeRepositoryLocal extends ChallengeRepository {
     return challenge.copyWith(
       days: updatedDays,
       lastCompletedDate: updatedDays.any((d) => d.isCompleted) ? date : null,
-    );
-  }
-
-  /// Resets the challenge by clearing all days and setting start date to now.
-  ChallengeModel _handleStartOver(ChallengeModel challenge) {
-    return challenge.copyWith(
-      days: [],
-      startDate: DateTime.now(),
-      numberOfAttempts: challenge.numberOfAttempts + 1,
-    );
-  }
-
-  /// Extends the challenge duration by one day and marks yesterday as skipped.
-  /// Increments grace days spent counter.
-  ChallengeModel _handleExtendChallenge(ChallengeModel challenge) {
-    final yesterday = DateTime.now().subtract(const Duration(days: 1));
-    return challenge.copyWith(
-      days: [
-        ...challenge.days..removeWhere((day) => day.date.withoutTime == yesterday.withoutTime),
-        DayModel(
-          date: yesterday,
-          status: DayStatus.skipped,
-        ),
-      ],
-      targetDays: challenge.targetDays + 1,
-      graceDaysSpent: challenge.graceDaysSpent + 1,
     );
   }
 

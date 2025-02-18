@@ -43,9 +43,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      ref.read(dashboardViewModelProvider.notifier).analyzeChallenges();
+      await ref.read(dashboardViewModelProvider.notifier).analyzeChallenges();
       ref.read(uncheckedChallengesAnalyzerProvider.notifier).shouldCheckChallenges();
     }
   }
@@ -57,7 +57,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
     _setupUncheckedChallengesListener(
       ref: ref,
       context: context,
-      challengesAsyncValue: challengesAsyncValue,
     );
 
     return Scaffold(
@@ -112,17 +111,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
   void _setupUncheckedChallengesListener({
     required WidgetRef ref,
     required BuildContext context,
-    required AsyncValue<List<ChallengeModel>> challengesAsyncValue,
   }) {
     ref.listen(
       uncheckedChallengesAnalyzerProvider,
-      (_, shouldCheck) {
-        if (!shouldCheck || !challengesAsyncValue.hasValue) return;
+      (_, shouldCheck) async {
+        final challengesResult = await ref.read(challengeRepositoryProvider).getCurrentChallenges();
+        if (challengesResult.isError()) return;
+        final challenges = challengesResult.getOrThrow();
+        if (!shouldCheck || challenges.isEmpty) return;
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           UncheckedChallengesBottomSheet.showIfNeeded(
             context: context,
-            challenges: challengesAsyncValue.value!.where((challenge) => !(challenge.isArchived ?? false)).toList(),
+            challenges: challenges.where((challenge) => !(challenge.isArchived ?? false)).toList(),
           );
         });
       },

@@ -12,4 +12,8 @@ extension DateTimeExtension on DateTime {
   bool isBeforeOrAt(DateTime other) {
     return isBefore(other) || isSameDay(other);
   }
+
+  bool isAfterOrAt(DateTime other) {
+    return isAfter(other) || isSameDay(other);
+  }
 }

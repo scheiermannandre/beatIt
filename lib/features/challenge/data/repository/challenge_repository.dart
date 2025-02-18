@@ -71,7 +71,7 @@ abstract class ChallengeRepository {
     required DateTime date,
   });
 
-  AsyncResult<List<ChallengeModel>> analyzeChallenges();
+  AsyncResult<List<ChallengeModel>> checkNeedToArchiveChallenge();
 
   AsyncResult<Unit> enableStartOver({
     required String challengeId,
@@ -84,7 +84,10 @@ abstract class ChallengeRepository {
 
   AsyncResult<Unit> breakChallengeIfNeeded({
     required String challengeId,
+    DateTime? date,
   });
+
+  AsyncResult<List<ChallengeModel>> checkNeedToBreakChallenges();
 
   void updateCache(String id, ChallengeModel challenge) {
     _cache[id] = challenge;

@@ -38,6 +38,7 @@ class DashboardViewModel extends _$DashboardViewModel {
 
   Future<void> analyzeChallenges() async {
     final repository = ref.read(challengeRepositoryProvider);
-    await repository.analyzeChallenges();
+    await repository.checkNeedToBreakChallenges();
+    await repository.checkNeedToArchiveChallenge();
   }
 }
